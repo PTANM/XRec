@@ -1,6 +1,6 @@
 import pickle
 import torch
-from explainer.models.explainer_mlp import XRecMLPExplainer
+from explainer_mlp import XRecMLPExplainer
 
 
 def run_inference(config: dict, user_id: int, item_id: int) -> str:

@@ -4,8 +4,8 @@ from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from transformers import get_cosine_schedule_with_warmup
 
-from explainer.models.explainer_mlp import XRecMLPExplainer
-from explainer.utils.dataset import XRecDataset   # existing XRec dataset util
+from explainer_mlp import XRecMLPExplainer
+# from explainer.utils.dataset import XRecDataset   # existing XRec dataset util
 
 
 def train(config: dict):
