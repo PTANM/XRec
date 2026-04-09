@@ -138,7 +138,7 @@ class Explainer(torch.nn.Module):
         loss = nn.CrossEntropyLoss()(shift_logits, shift_labels)
         return loss
     
-    def generate(self, user_embedding, item_embedding, input_text):
+    def generate(self, user_embedding, item_embedding, input_text, logits_processor=None):
         # Convert embeddings
         converted_user_embedding = self.user_embedding_converter(user_embedding).half()
         converted_item_embedding = self.item_embedding_converter(item_embedding).half()
@@ -168,7 +168,7 @@ class Explainer(torch.nn.Module):
         inputs_embeds[torch.arange(item_embed_position.shape[0]), item_embed_position[:,0], :] = converted_item_embedding
 
         # shape of outputs.logits: [batch_size, input_length, vocab_size]
-        outputs = self.model.generate(inputs_embeds=inputs_embeds, max_new_tokens=128, user_embed = converted_user_embedding, item_embed = converted_item_embedding, user_embed_pos=user_embed_position, item_embed_pos=item_embed_position)
+        outputs = self.model.generate(inputs_embeds=inputs_embeds, max_new_tokens=128, user_embed=converted_user_embedding, item_embed=converted_item_embedding, user_embed_pos=user_embed_position, item_embed_pos=item_embed_position, logits_processor=logits_processor)
         output_text = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
         return output_text
         

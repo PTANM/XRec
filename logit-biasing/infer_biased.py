@@ -1,75 +1,101 @@
+# infer_biased.py
+
+import sys
+sys.path.append('../explainer')
+sys.path.append('../')
+
 import pickle
 import torch
-from explainer_mlp import XRecMLPExplainer
+from models.explainer import Explainer
+from utils.data_handler import DataHandler
+from utils.parse import args
+from logit_bias import ItemConstrainedLogitsProcessor
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"using device {device}")
 
 
-def run_inference(config: dict, user_id: int, item_id: int) -> str:
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+class XRecBiased:
+    def __init__(self):
+        print(f"dataset: {args.dataset}")
+        self.model = Explainer().to(device)
+        self.data_handler = DataHandler()
 
-    # ── Load vocab ─────────────────────────────────────────────────────────
-    with open(config["vocab_path"], "rb") as f:
-        vocab_data = pickle.load(f)
-    item_vocab   = vocab_data["item_vocab"]        # {item_id_str -> set[int]}
-    blacklist_ids = vocab_data["blacklist_ids"]
+        _, _, self.tst_loader = self.data_handler.load_data()
 
-    verified_ids = item_vocab.get(str(item_id), set())
+        self.user_embedding_converter_path = f"../data/{args.dataset}/user_converter.pkl"
+        self.item_embedding_converter_path = f"../data/{args.dataset}/item_converter.pkl"
+        self.tst_predictions_path = f"../data/{args.dataset}/tst_predictions_biased.pkl"
+        self.tst_references_path  = f"../data/{args.dataset}/tst_references_biased.pkl"
 
-    # ── Load model ─────────────────────────────────────────────────────────
-    model = XRecMLPExplainer(
-        llm_model_name=config["llm_model_name"],
-        collab_emb_dim=config["collab_emb_dim"],
-        device=device,
-    )
-    model.load_state_dict(torch.load(config["output_model_path"], map_location=device))
-    model.eval()
+        # Load item vocab for logit biasing
+        with open(f"../data/{args.dataset}/item_vocab.pkl", "rb") as f:
+            vocab_data = pickle.load(f)
+        self.item_vocab    = vocab_data["item_vocab"]
+        self.blacklist_ids = vocab_data["blacklist_ids"]
 
-    # ── Load embeddings ────────────────────────────────────────────────────
-    with open(config["user_emb_path"], "rb") as f:
-        user_embs = torch.tensor(pickle.load(f), dtype=torch.float32).to(device)
-    with open(config["item_emb_path"], "rb") as f:
-        item_embs = torch.tensor(pickle.load(f), dtype=torch.float32).to(device)
+    def evaluate(self):
+        # Load pre-trained MoE converter weights
+        self.model.user_embedding_converter.load_state_dict(
+            torch.load(self.user_embedding_converter_path, map_location=device)
+        )
+        self.model.item_embedding_converter.load_state_dict(
+            torch.load(self.item_embedding_converter_path, map_location=device)
+        )
+        self.model.eval()
 
-    user_collab = user_embs[user_id].unsqueeze(0)     # (1, emb_dim)
-    item_collab = item_embs[item_id].unsqueeze(0)     # (1, emb_dim)
+        predictions = []
+        references  = []
 
-    # ── Build prompt ───────────────────────────────────────────────────────
-    prompt_text = (
-        "Explain why this item is a good recommendation for the user "
-        "based on their purchase history and item features.\n\nExplanation:"
-    )
-    encoded = model.tokenizer(
-        prompt_text,
-        return_tensors="pt",
-        padding=True,
-        truncation=True,
-        max_length=256,
-    )
+        with torch.no_grad():
+            for i, batch in enumerate(self.tst_loader):
+                user_embed, item_embed, input_text, explain = batch
+                user_embed = user_embed.to(device)
+                item_embed = item_embed.to(device)
 
-    explanation = model.generate_explanation(
-        user_collab_emb=user_collab,
-        item_collab_emb=item_collab,
-        prompt_input_ids=encoded["input_ids"].to(device),
-        prompt_attention_mask=encoded["attention_mask"].to(device),
-        verified_token_ids=verified_ids,
-        blacklist_token_ids=blacklist_ids,
-        positive_bias=config.get("positive_bias", 15.0),
-        negative_bias=config.get("negative_bias", 10.0),
-        max_new_tokens=config.get("max_new_tokens", 128),
-    )
-    return explanation
+                # Look up verified token IDs for this item
+                # tst_loader batch_size=1, so we take the first item
+                iid = str(self.data_handler.tst_dict["iid"][i])
+                verified_ids = self.item_vocab.get(iid, set())
+
+                # Build logit processor for this item
+                logit_processor = ItemConstrainedLogitsProcessor(
+                    verified_token_ids=verified_ids,
+                    blacklist_token_ids=self.blacklist_ids,
+                    positive_bias=15.0,
+                    negative_bias=10.0,
+                    device=str(device),
+                )
+
+                outputs = self.model.generate(
+                    user_embed, item_embed, input_text,
+                    logits_processor=[logit_processor]
+                )
+
+                end_idx = outputs[0].find("[")
+                if end_idx != -1:
+                    outputs[0] = outputs[0][:end_idx]
+
+                predictions.append(outputs[0])
+                references.append(explain[0])
+
+                if i % 10 == 0 and i != 0:
+                    print(f"Step [{i}/{len(self.tst_loader)}]")
+                    print(f"Generated Explanation: {outputs[0]}")
+
+        with open(self.tst_predictions_path, "wb") as f:
+            pickle.dump(predictions, f)
+        with open(self.tst_references_path, "wb") as f:
+            pickle.dump(references, f)
+
+        print(f"Saved {len(predictions)} predictions to {self.tst_predictions_path}")
+
+
+def main():
+    sample = XRecBiased()
+    print("Generating biased explanations...")
+    sample.evaluate()
 
 
 if __name__ == "__main__":
-    config = {
-        "llm_model_name":    "meta-llama/Llama-2-7b-hf",
-        "collab_emb_dim":    64,
-        "vocab_path":        "data/amazon/item_vocab.pkl",
-        "user_emb_path":     "data/amazon/user_emb.pkl",
-        "item_emb_path":     "data/amazon/item_emb.pkl",
-        "output_model_path": "checkpoints/xrec_mlp.pt",
-        "positive_bias":     15.0,
-        "negative_bias":     10.0,
-        "max_new_tokens":    128,
-    }
-    result = run_inference(config, user_id=42, item_id=101)
-    print("Generated Explanation:\n", result)
+    main()

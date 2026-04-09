@@ -44,6 +44,7 @@ class DataHandler:
         trn_dict = trn_data.to_dict("list")
         val_dict = val_data.to_dict("list")
         tst_dict = tst_data.to_dict("list")
+        self.tst_dict = tst_dict
 
         # combine all information input input string
         trn_input = []

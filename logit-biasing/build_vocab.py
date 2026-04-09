@@ -1,13 +1,13 @@
+# build_vocab.py
+
 import json
 import pickle
 from transformers import AutoTokenizer
 
-# ── config ──────────────────────────────────────────────────────────────────
-MODEL_NAME   = "meta-llama/Llama-2-7b-hf"   # same tokenizer as XRec's LLM
-DATA_PATH    = "data/amazon/data.json"        # XRec item profile JSON
-OUTPUT_PATH  = "data/amazon/item_vocab.pkl"   # {item_id -> set of token IDs}
+MODEL_NAME   = "meta-llama/Llama-2-7b-hf"
+DATA_PATH    = "../data/amazon/item_profile.json"
+OUTPUT_PATH  = "../data/amazon/item_vocab.pkl"
 
-# Generic filler words to suppress during generation
 BLACKLIST_WORDS = [
     "the", "a", "an", "is", "are", "was", "were", "has", "have",
     "it", "this", "that", "be", "been", "being", "very", "really",
@@ -15,49 +15,39 @@ BLACKLIST_WORDS = [
     "at", "to", "for", "with", "as", "by", "from", "about",
 ]
 
-METADATA_KEYS = ["category", "brand", "price_range", "features", "tags"]
-# ────────────────────────────────────────────────────────────────────────────
 
-def extract_item_attributes(item_profile: dict) -> list[str]:
-    """Pull discrete string attributes from one item's profile."""
-    attributes = []
-    for key in METADATA_KEYS:
-        val = item_profile.get(key)
-        if val is None:
-            continue
-        if isinstance(val, list):
-            attributes.extend([str(v).strip() for v in val if v])
-        elif isinstance(val, str):
-            # Split multi-word phrases into individual tokens too
-            attributes.append(val.strip())
-            attributes.extend(val.strip().split())
-    return list(set(a for a in attributes if a))
+def extract_text_from_completion(completion: str) -> str:
+    """Parse the inner JSON and concatenate summarization + reasoning."""
+    try:
+        inner = json.loads(completion)
+        summarization = inner.get("summarization", "")
+        reasoning     = inner.get("reasoning", "")
+        return f"{summarization} {reasoning}".strip()
+    except (json.JSONDecodeError, TypeError):
+        # Fall back to raw string if parsing fails
+        return completion
 
 
 def build_item_vocab(data_path: str, tokenizer, output_path: str):
-    with open(data_path, "r") as f:
-        data = json.load(f)  # list of {item_id, item_profile, ...}
-
     item_vocab: dict[str, set[int]] = {}
 
-    for record in data:
-        item_id      = str(record["item_id"])
-        item_profile = record.get("item_profile", {})
-        attributes   = extract_item_attributes(item_profile)
+    with open(data_path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            record     = json.loads(line)
+            item_id    = str(record["iid"])
+            completion = record.get("completion", "")
+            text       = extract_text_from_completion(completion)
 
-        token_ids: set[int] = set()
-        for attr in attributes:
-            # Encode without BOS; add_special_tokens=False keeps it clean
-            ids = tokenizer.encode(attr, add_special_tokens=False)
-            token_ids.update(ids)
+            token_ids = set(tokenizer.encode(text, add_special_tokens=False))
+            item_vocab[item_id] = token_ids
 
-        item_vocab[item_id] = token_ids
-
-    # Also compute blacklist token IDs (shared across all items)
+    # Compute blacklist token IDs
     blacklist_ids: set[int] = set()
     for word in BLACKLIST_WORDS:
         ids = tokenizer.encode(word, add_special_tokens=False)
-        # Also encode capitalised variant
         ids += tokenizer.encode(word.capitalize(), add_special_tokens=False)
         blacklist_ids.update(ids)
 
