@@ -1,8 +1,8 @@
 # infer_biased.py
 
 import sys
-sys.path.append('../explainer')
-sys.path.append('../')
+sys.path.append('/scratch/user/kiarab/XRec/explainer')
+sys.path.append('/scratch/user/kiarab/XRec')
 
 import pickle
 import torch
@@ -23,13 +23,13 @@ class XRecBiased:
 
         _, _, self.tst_loader = self.data_handler.load_data()
 
-        self.user_embedding_converter_path = f"../data/{args.dataset}/user_converter.pkl"
-        self.item_embedding_converter_path = f"../data/{args.dataset}/item_converter.pkl"
-        self.tst_predictions_path = f"../data/{args.dataset}/tst_predictions_biased.pkl"
-        self.tst_references_path  = f"../data/{args.dataset}/tst_references_biased.pkl"
+        self.user_embedding_converter_path = f"/scratch/user/kiarab/XRec/data/{args.dataset}/user_converter.pkl"
+        self.item_embedding_converter_path = f"/scratch/user/kiarab/XRec/data/{args.dataset}/item_converter.pkl"
+        self.tst_predictions_path = f"/scratch/user/kiarab/XRec/data/{args.dataset}/tst_predictions_biased.pkl"
+        self.tst_references_path  = f"/scratch/user/kiarab/XRec/data/{args.dataset}/tst_references_biased.pkl"
 
         # Load item vocab for logit biasing
-        with open(f"../data/{args.dataset}/item_vocab.pkl", "rb") as f:
+        with open(f"/scratch/user/kiarab/XRec/data/{args.dataset}/item_vocab.pkl", "rb") as f:
             vocab_data = pickle.load(f)
         self.item_vocab    = vocab_data["item_vocab"]
         self.blacklist_ids = vocab_data["blacklist_ids"]
@@ -53,17 +53,14 @@ class XRecBiased:
                 user_embed = user_embed.to(device)
                 item_embed = item_embed.to(device)
 
-                # Look up verified token IDs for this item
-                # tst_loader batch_size=1, so we take the first item
                 iid = str(self.data_handler.tst_dict["iid"][i])
                 verified_ids = self.item_vocab.get(iid, set())
 
-                # Build logit processor for this item
                 logit_processor = ItemConstrainedLogitsProcessor(
                     verified_token_ids=verified_ids,
                     blacklist_token_ids=self.blacklist_ids,
-                    positive_bias=15.0,
-                    negative_bias=10.0,
+                    positive_bias=3.0,
+                    negative_bias=5.0,
                     device=str(device),
                 )
 
@@ -79,16 +76,24 @@ class XRecBiased:
                 predictions.append(outputs[0])
                 references.append(explain[0])
 
+                # Save checkpoint every 100 steps
+                if i % 100 == 0:
+                    with open(self.tst_predictions_path + ".checkpoint", "wb") as f:
+                        pickle.dump(predictions, f)
+                    with open(self.tst_references_path + ".checkpoint", "wb") as f:
+                        pickle.dump(references, f)
+                    print(f"Checkpoint saved at step {i} / {len(self.tst_loader)}", flush=True)
+
                 if i % 10 == 0 and i != 0:
-                    print(f"Step [{i}/{len(self.tst_loader)}]")
-                    print(f"Generated Explanation: {outputs[0]}")
+                    print(f"Step [{i}/{len(self.tst_loader)}]", flush=True)
+                    print(f"Generated Explanation: {outputs[0]}", flush=True)
 
         with open(self.tst_predictions_path, "wb") as f:
             pickle.dump(predictions, f)
         with open(self.tst_references_path, "wb") as f:
             pickle.dump(references, f)
 
-        print(f"Saved {len(predictions)} predictions to {self.tst_predictions_path}")
+        print(f"Saved {len(predictions)} predictions.", flush=True)
 
 
 def main():

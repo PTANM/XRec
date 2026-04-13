@@ -1,3 +1,4 @@
+import os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -64,7 +65,7 @@ class Explainer(torch.nn.Module):
         super(Explainer, self).__init__()
         from huggingface_hub import login
         # Login to Hugging Face Hub
-        login() 
+        pass  # login handled via cached model 
         
         # Load the model and tokenizer
         model_name = "meta-llama/Llama-2-7b-chat-hf"
@@ -87,8 +88,8 @@ class Explainer(torch.nn.Module):
 
     def forward(self, user_embedding, item_embedding, input_text):
         # Convert embeddings
-        converted_user_embedding = self.user_embedding_converter(user_embedding).half()
-        converted_item_embedding = self.item_embedding_converter(item_embedding).half()
+        converted_user_embedding = self.user_embedding_converter(user_embedding)
+        converted_item_embedding = self.item_embedding_converter(item_embedding)
 
         # shape of tokenized_inputs['input_ids']: [batch_size, input_length]
         tokenized_inputs = self.tokenizer(
@@ -96,7 +97,9 @@ class Explainer(torch.nn.Module):
         )
 
         # Convert tokenized input IDs to model's embeddings
-        inputs_embeds = self.model.get_input_embeddings()(tokenized_inputs['input_ids'])
+        inputs_embeds = self.model.get_input_embeddings()(tokenized_inputs["input_ids"])
+        converted_user_embedding = converted_user_embedding.to(inputs_embeds.dtype)
+        converted_item_embedding = converted_item_embedding.to(inputs_embeds.dtype)
         
         # Get the token ID for the <USER_EMBED> <ITEM_EMBED> token
         user_embed_token_id = self.tokenizer.convert_tokens_to_ids("<USER_EMBED>")
@@ -140,8 +143,8 @@ class Explainer(torch.nn.Module):
     
     def generate(self, user_embedding, item_embedding, input_text, logits_processor=None):
         # Convert embeddings
-        converted_user_embedding = self.user_embedding_converter(user_embedding).half()
-        converted_item_embedding = self.item_embedding_converter(item_embedding).half()
+        converted_user_embedding = self.user_embedding_converter(user_embedding)
+        converted_item_embedding = self.item_embedding_converter(item_embedding)
 
         # shape of tokenized_inputs['input_ids']: [batch_size, input_length]
         tokenized_inputs = self.tokenizer(
@@ -149,7 +152,9 @@ class Explainer(torch.nn.Module):
         )
 
         # Convert tokenized input IDs to model's embeddings
-        inputs_embeds = self.model.get_input_embeddings()(tokenized_inputs['input_ids'])
+        inputs_embeds = self.model.get_input_embeddings()(tokenized_inputs["input_ids"])
+        converted_user_embedding = converted_user_embedding.to(inputs_embeds.dtype)
+        converted_item_embedding = converted_item_embedding.to(inputs_embeds.dtype)
         
         # Get the token ID for the <USER_EMBED> <ITEM_EMBED> token
         user_embed_token_id = self.tokenizer.convert_tokens_to_ids("<USER_EMBED>")
