@@ -1,8 +1,15 @@
 import json, pickle
+import os
 from utils.parse import args
 
-pred_path = f"data/{args.dataset}/tst_pred.pkl"
-ref_path = f"data/{args.dataset}/tst_ref.pkl"
+run_tag = args.checkpoint_tag or args.adapter_type
+pred_path = f"data/{args.dataset}/tst_pred_{run_tag}.pkl"
+ref_path = f"data/{args.dataset}/tst_ref_{run_tag}.pkl"
+
+if not os.path.exists(pred_path):
+    pred_path = f"data/{args.dataset}/tst_pred.pkl"
+if not os.path.exists(ref_path):
+    ref_path = f"data/{args.dataset}/tst_ref.pkl"
 
 with open(pred_path, "rb") as f:
     predictions = pickle.load(f)
