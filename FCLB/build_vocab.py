@@ -10,7 +10,7 @@ nltk.download('averaged_perceptron_tagger', quiet=True)
 nltk.download('punkt_tab', quiet=True)
 
 MODEL_NAME = "meta-llama/Llama-2-7b-hf"
-BASE_DIR = "/scratch/user/kiarab/XRec/data/amazon"  # Make as input
+BASE_DIR = "/scratch/user/kiarab/XRec/FCLB/data/amazon"  # Make as input
 
 ITEM_PROFILE_PATH = os.path.join(BASE_DIR, "item_profile.json")
 USER_PROFILE_PATH = os.path.join(BASE_DIR, "user_profile.json")
