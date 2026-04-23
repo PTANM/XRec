@@ -19,3 +19,7 @@ node_modules/
 # Ignore IDE/editor specific files
 .vscode/
 .idea/
+
+# Counterfactual: checkpoint artifacts
+counterfactual/*checkpoint*
+counterfactual/outputs/cf_lora_test/
