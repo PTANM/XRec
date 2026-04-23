@@ -1,0 +1,154 @@
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x14a8d3612bf0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x14a8d3612ef0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x14a8d36130a0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x14a8d3613250>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x14a8d3613400>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /simple/openpyxl/
+ERROR: Could not find a version that satisfies the requirement openpyxl (from versions: none)
+ERROR: No matching distribution found for openpyxl
+Loading checkpoint shards:   0%|          | 0/6 [00:00<?, ?it/s]Loading checkpoint shards:  17%|█▋        | 1/6 [00:04<00:23,  4.67s/it]Loading checkpoint shards:  33%|███▎      | 2/6 [00:09<00:17,  4.48s/it]Loading checkpoint shards:  50%|█████     | 3/6 [00:13<00:13,  4.49s/it]Loading checkpoint shards:  67%|██████▋   | 4/6 [00:18<00:09,  4.53s/it]Loading checkpoint shards:  83%|████████▎ | 5/6 [00:21<00:04,  4.17s/it]Loading checkpoint shards: 100%|██████████| 6/6 [00:24<00:00,  3.68s/it]Loading checkpoint shards: 100%|██████████| 6/6 [00:24<00:00,  4.06s/it]
+Epoch 1:   0%|          | 0/5 [00:00<?, ?it/s]Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 748, in convert_to_tensors
+    tensor = as_tensor(value)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 720, in as_tensor
+    return torch.tensor(value)
+ValueError: expected sequence of length 464 at dim 1 (got 381)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 457, in <module>
+    loss = training_step(model, batch, device)
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 260, in training_step
+    enc_prompt = tokenizer(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 2803, in __call__
+    encodings = self._call_one(text=text, text_pair=text_pair, **all_kwargs)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 2889, in _call_one
+    return self.batch_encode_plus(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 3080, in batch_encode_plus
+    return self._batch_encode_plus(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils.py", line 807, in _batch_encode_plus
+    batch_outputs = self._batch_prepare_for_model(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils.py", line 887, in _batch_prepare_for_model
+    batch_outputs = BatchEncoding(batch_outputs, tensor_type=return_tensors)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 223, in __init__
+    self.convert_to_tensors(tensor_type=tensor_type, prepend_batch_axis=prepend_batch_axis)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 764, in convert_to_tensors
+    raise ValueError(
+ValueError: Unable to create tensor, you should probably activate truncation and/or padding with 'padding=True' 'truncation=True' to have batched tensors with the same length. Perhaps your features (`input_ids` in this case) have excessive nesting (inputs type `list` where type `int` is expected).
+Epoch 1:  20%|██        | 1/5 [00:09<00:36,  9.16s/it]Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 748, in convert_to_tensors
+    tensor = as_tensor(value)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 720, in as_tensor
+    return torch.tensor(value)
+ValueError: expected sequence of length 385 at dim 1 (got 436)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 457, in <module>
+    loss = training_step(model, batch, device)
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 260, in training_step
+    enc_prompt = tokenizer(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 2803, in __call__
+    encodings = self._call_one(text=text, text_pair=text_pair, **all_kwargs)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 2889, in _call_one
+    return self.batch_encode_plus(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 3080, in batch_encode_plus
+    return self._batch_encode_plus(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils.py", line 807, in _batch_encode_plus
+    batch_outputs = self._batch_prepare_for_model(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils.py", line 887, in _batch_prepare_for_model
+    batch_outputs = BatchEncoding(batch_outputs, tensor_type=return_tensors)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 223, in __init__
+    self.convert_to_tensors(tensor_type=tensor_type, prepend_batch_axis=prepend_batch_axis)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 764, in convert_to_tensors
+    raise ValueError(
+ValueError: Unable to create tensor, you should probably activate truncation and/or padding with 'padding=True' 'truncation=True' to have batched tensors with the same length. Perhaps your features (`input_ids` in this case) have excessive nesting (inputs type `list` where type `int` is expected).
+Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 748, in convert_to_tensors
+    tensor = as_tensor(value)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 720, in as_tensor
+    return torch.tensor(value)
+ValueError: expected sequence of length 383 at dim 1 (got 422)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 457, in <module>
+    loss = training_step(model, batch, device)
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 260, in training_step
+    enc_prompt = tokenizer(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 2803, in __call__
+    encodings = self._call_one(text=text, text_pair=text_pair, **all_kwargs)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 2889, in _call_one
+    return self.batch_encode_plus(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 3080, in batch_encode_plus
+    return self._batch_encode_plus(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils.py", line 807, in _batch_encode_plus
+    batch_outputs = self._batch_prepare_for_model(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils.py", line 887, in _batch_prepare_for_model
+    batch_outputs = BatchEncoding(batch_outputs, tensor_type=return_tensors)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 223, in __init__
+    self.convert_to_tensors(tensor_type=tensor_type, prepend_batch_axis=prepend_batch_axis)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 764, in convert_to_tensors
+    raise ValueError(
+ValueError: Unable to create tensor, you should probably activate truncation and/or padding with 'padding=True' 'truncation=True' to have batched tensors with the same length. Perhaps your features (`input_ids` in this case) have excessive nesting (inputs type `list` where type `int` is expected).
+Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 748, in convert_to_tensors
+    tensor = as_tensor(value)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 720, in as_tensor
+    return torch.tensor(value)
+ValueError: expected sequence of length 457 at dim 1 (got 407)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 457, in <module>
+    loss = training_step(model, batch, device)
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 260, in training_step
+    enc_prompt = tokenizer(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 2803, in __call__
+    encodings = self._call_one(text=text, text_pair=text_pair, **all_kwargs)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 2889, in _call_one
+    return self.batch_encode_plus(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 3080, in batch_encode_plus
+    return self._batch_encode_plus(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils.py", line 807, in _batch_encode_plus
+    batch_outputs = self._batch_prepare_for_model(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils.py", line 887, in _batch_prepare_for_model
+    batch_outputs = BatchEncoding(batch_outputs, tensor_type=return_tensors)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 223, in __init__
+    self.convert_to_tensors(tensor_type=tensor_type, prepend_batch_axis=prepend_batch_axis)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 764, in convert_to_tensors
+    raise ValueError(
+ValueError: Unable to create tensor, you should probably activate truncation and/or padding with 'padding=True' 'truncation=True' to have batched tensors with the same length. Perhaps your features (`input_ids` in this case) have excessive nesting (inputs type `list` where type `int` is expected).
+Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 748, in convert_to_tensors
+    tensor = as_tensor(value)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 720, in as_tensor
+    return torch.tensor(value)
+ValueError: expected sequence of length 343 at dim 1 (got 512)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 457, in <module>
+    loss = training_step(model, batch, device)
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 260, in training_step
+    enc_prompt = tokenizer(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 2803, in __call__
+    encodings = self._call_one(text=text, text_pair=text_pair, **all_kwargs)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 2889, in _call_one
+    return self.batch_encode_plus(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 3080, in batch_encode_plus
+    return self._batch_encode_plus(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils.py", line 807, in _batch_encode_plus
+    batch_outputs = self._batch_prepare_for_model(
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils.py", line 887, in _batch_prepare_for_model
+    batch_outputs = BatchEncoding(batch_outputs, tensor_type=return_tensors)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 223, in __init__
+    self.convert_to_tensors(tensor_type=tensor_type, prepend_batch_axis=prepend_batch_axis)
+  File "/scratch/user/pranati.tyagi/xrec_env/lib/python3.10/site-packages/transformers/tokenization_utils_base.py", line 764, in convert_to_tensors
+    raise ValueError(
+ValueError: Unable to create tensor, you should probably activate truncation and/or padding with 'padding=True' 'truncation=True' to have batched tensors with the same length. Perhaps your features (`input_ids` in this case) have excessive nesting (inputs type `list` where type `int` is expected).
+Epoch 1: 100%|██████████| 5/5 [00:09<00:00,  1.39s/it]Epoch 1: 100%|██████████| 5/5 [00:09<00:00,  1.86s/it]

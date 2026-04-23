@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/counterfactual/generate_cf_explanations.py", line 228, in <module>
+    main()
+  File "/scratch/user/pranati.tyagi/counterfactual/generate_cf_explanations.py", line 106, in main
+    with open(DATA_DIR / "user_emb.pkl", "rb") as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'data/amazon/user_emb.pkl'

@@ -1,0 +1,13 @@
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x1485a285ace0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x1485a285afe0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x1485a285b190>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x1485a285b340>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /simple/openpyxl/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x1485a285b4f0>: Failed to establish a new connection: [Errno 101] Network is unreachable')': /simple/openpyxl/
+ERROR: Could not find a version that satisfies the requirement openpyxl (from versions: none)
+ERROR: No matching distribution found for openpyxl
+Traceback (most recent call last):
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 369, in <module>
+    user_emb = load_pickle(DATA_DIR / "user_emb.pkl").cpu()
+  File "/scratch/user/pranati.tyagi/counterfactual/finetune_cf.py", line 66, in load_pickle
+    with open(path, "rb") as f:
+FileNotFoundError: [Errno 2] No such file or directory: 'data/amazon/user_emb.pkl'
