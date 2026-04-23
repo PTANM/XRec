@@ -23,3 +23,7 @@ node_modules/
 # Counterfactual: checkpoint artifacts
 counterfactual/*checkpoint*
 counterfactual/outputs/cf_lora_test/
+
+# Ignore log/error files
+*.err
+counterfactual/logs/
