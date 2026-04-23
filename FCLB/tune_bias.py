@@ -83,13 +83,13 @@ print("Loading model and data...")
 model = Explainer().to(device)
 model.user_embedding_converter.load_state_dict(
     torch.load(
-        f"/scratch/user/kiarab/XRec/data/{args.dataset}/user_converter.pkl",
+        f"/scratch/user/kiarab/XRec/FCLB/data/{args.dataset}/user_converter.pkl",
         map_location=device,
     )
 )
 model.item_embedding_converter.load_state_dict(
     torch.load(
-        f"/scratch/user/kiarab/XRec/data/{args.dataset}/item_converter.pkl",
+        f"/scratch/user/kiarab/XRec/FCLB/data/{args.dataset}/item_converter.pkl",
         map_location=device,
     )
 )
@@ -98,7 +98,7 @@ model.eval()
 data_handler = DataHandler()
 _, _, tst_loader = data_handler.load_data()
 
-base = f"/scratch/user/kiarab/XRec/data/{args.dataset}"
+base = f"/scratch/user/kiarab/XRec/FCLB/data/{args.dataset}"
 
 with open(f"{base}/item_vocab.pkl", "rb") as f:
     vocab_data = pickle.load(f)
