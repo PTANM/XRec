@@ -1,0 +1,239 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from transformers import LlamaTokenizer
+from models.modeling_explainer import LlamaForCausalLM
+
+
+class PWLayer(nn.Module):
+    """Single Parametric Whitening Layer
+    """
+    def __init__(self, input_size, output_size, dropout=0.0):
+        super(PWLayer, self).__init__()
+
+        self.dropout = nn.Dropout(p=dropout)
+        self.bias = nn.Parameter(torch.zeros(input_size), requires_grad=True)
+        self.lin = nn.Linear(input_size, output_size, bias=False)
+
+        self.apply(self._init_weights)
+
+    def _init_weights(self, module):
+        if isinstance(module, nn.Linear):
+            module.weight.data.normal_(mean=0.0, std=0.02)
+
+    def forward(self, x):
+        return self.lin(self.dropout(x) - self.bias)
+    
+
+class MoEAdaptorLayer(nn.Module):
+    """MoE-enhanced Adaptor
+    """
+    def __init__(self, n_exps=8, layers=[64, 4096], dropout=0.2, noise=True):
+        super(MoEAdaptorLayer, self).__init__()
+
+        self.n_exps = n_exps
+        self.noisy_gating = noise
+
+        self.experts = nn.ModuleList([PWLayer(layers[0], layers[1], dropout) for i in range(n_exps)])
+        self.w_gate = nn.Parameter(torch.zeros(layers[0], n_exps), requires_grad=True)
+        self.w_noise = nn.Parameter(torch.zeros(layers[0], n_exps), requires_grad=True)
+
+    def noisy_top_k_gating(self, x, train, noise_epsilon=1e-2):
+        clean_logits = x @ self.w_gate
+        if self.noisy_gating and train:
+            raw_noise_stddev = x @ self.w_noise
+            noise_stddev = ((F.softplus(raw_noise_stddev) + noise_epsilon))
+            noisy_logits = clean_logits + (torch.randn_like(clean_logits).to(x.device) * noise_stddev)
+            logits = noisy_logits
+        else:
+            logits = clean_logits
+
+        gates = F.softmax(logits, dim=-1)
+        return gates
+
+    def forward(self, x):
+        gates = self.noisy_top_k_gating(x, self.training) # (B, n_E)
+        expert_outputs = [self.experts[i](x).unsqueeze(-2) for i in range(self.n_exps)] # [(B, 1, D)]
+        expert_outputs = torch.cat(expert_outputs, dim=-2)
+        multiple_outputs = gates.unsqueeze(-1) * expert_outputs
+        return multiple_outputs.sum(dim=-2)
+
+
+class Explainer(torch.nn.Module):
+    def __init__(self, token_size=4096, user_embed_size=64, item_embed_size=64):
+        super(Explainer, self).__init__()
+        
+        # OFFLINE LOCAL LLAMA PATH
+        LOCAL_LLAMA_PATH = "/scratch/user/pranati.tyagi/Self_RAG/models/llama2_7b_chat"
+        
+        # Load model completely offline from local folder
+        from transformers import AutoConfig, BitsAndBytesConfig
+        config = AutoConfig.from_pretrained(LOCAL_LLAMA_PATH, local_files_only=True)
+        self.model = LlamaForCausalLM.from_pretrained(
+            LOCAL_LLAMA_PATH,
+            config=config,
+            local_files_only=True,
+            torch_dtype=torch.float16,
+            low_cpu_mem_usage=True
+        )
+        self.tokenizer = LlamaTokenizer.from_pretrained(
+            LOCAL_LLAMA_PATH,
+            local_files_only=True
+        )
+
+        # add special tokens for user and item embeddings
+        special_tokens_dict = {"additional_special_tokens": ["<USER_EMBED>", "<ITEM_EMBED>", "<EXPLAIN_POS>"]}
+        self.tokenizer.add_special_tokens(special_tokens_dict)
+        self.tokenizer.add_special_tokens({"pad_token":"<pad>"})
+        self.tokenizer.pad_token = "<pad>"
+        self.model.resize_token_embeddings(len(self.tokenizer))
+        
+        # freeze parameters in llama
+        for param in self.model.parameters():
+            param.requires_grad = False
+
+        self.user_embedding_converter = MoEAdaptorLayer(n_exps=8, layers=[user_embed_size, token_size], dropout=0.2, noise=True)
+        self.item_embedding_converter = MoEAdaptorLayer(n_exps=8, layers=[item_embed_size, token_size], dropout=0.2, noise=True)
+
+    def forward(self, user_embedding, item_embedding, input_text):
+        # Convert embeddings
+        converted_user_embedding = self.user_embedding_converter(user_embedding).half()
+        converted_item_embedding = self.item_embedding_converter(item_embedding).half()
+
+        # shape of tokenized_inputs['input_ids']: [batch_size, input_length]
+        tokenized_inputs = self.tokenizer(
+            input_text, padding=True, return_tensors="pt"
+        )
+
+        # Convert tokenized input IDs to model's embeddings
+        inputs_embeds = self.model.get_input_embeddings()(tokenized_inputs['input_ids'])
+        
+        # Get the token ID for the <USER_EMBED> <ITEM_EMBED> token
+        user_embed_token_id = self.tokenizer.convert_tokens_to_ids("<USER_EMBED>")
+        item_embed_token_id = self.tokenizer.convert_tokens_to_ids("<ITEM_EMBED>")
+        explain_pos_token_id = self.tokenizer.convert_tokens_to_ids("<EXPLAIN_POS>")
+
+        # Find positions DIRECTLY on correct device - avoid CPU roundtrip bug
+        user_embed_position = (tokenized_inputs['input_ids'] == user_embed_token_id).nonzero()[:, 1:2]
+        item_embed_position = (tokenized_inputs['input_ids'] == item_embed_token_id).nonzero()[:, 1:2]
+        explain_pos_position = (tokenized_inputs['input_ids'] == explain_pos_token_id).nonzero()[:, 1:2]
+        
+        # Guard clause
+        if len(user_embed_position) == 0 or len(item_embed_position) == 0 or len(explain_pos_position) == 0:
+            return [""]
+
+        # replace by our converted embeddings
+        inputs_embeds[torch.arange(user_embed_position.shape[0], device=inputs_embeds.device), user_embed_position[:,0], :] = converted_user_embedding
+        inputs_embeds[torch.arange(item_embed_position.shape[0], device=inputs_embeds.device), item_embed_position[:,0], :] = converted_item_embedding
+
+        # shape of outputs.logits: [batch_size, input_length, vocab_size]
+        outputs = self.model(inputs_embeds=inputs_embeds, user_embed = converted_user_embedding, item_embed = converted_item_embedding, user_embed_pos=user_embed_position, item_embed_pos=item_embed_position)
+        return tokenized_inputs['input_ids'], outputs, explain_pos_position.flatten()
+
+    def loss(self, input_ids, outputs, explain_pos_position, device):
+        '''
+        input_ids: [batch_size, input_length]
+        outputs.logits: [batch_size, input_length, vocab_size]
+        explain_pos_position: [batch_size]
+        '''
+        # freeze the information
+        interval = torch.arange(input_ids.shape[1]).to(device)
+        mask = interval[None, :] < explain_pos_position[:, None]
+        input_ids[mask] = -100
+        
+        logits = outputs.logits
+        # Shift target_ids to the right to create labels; the last token is ignored in the targets.
+        shift_labels = input_ids[:, 1:].contiguous()
+        shift_logits = logits[:, :-1, :].contiguous()
+        shift_logits = shift_logits.view(-1, shift_logits.size(-1))
+        shift_labels = shift_labels.view(-1)
+        
+        loss = nn.CrossEntropyLoss()(shift_logits, shift_labels)
+        return loss
+    
+    def generate(self, user_embedding, item_embedding, input_text):
+        # Convert embeddings
+        converted_user_embedding = self.user_embedding_converter(user_embedding).half()
+        converted_item_embedding = self.item_embedding_converter(item_embedding).half()
+        
+        # Get correct device from input embeddings
+        target_device = user_embedding.device
+
+        # shape of tokenized_inputs['input_ids']: [batch_size, input_length]
+        tokenized_inputs = self.tokenizer(
+            input_text, 
+            padding='max_length', 
+            truncation=True, 
+            max_length=1024, 
+            return_tensors="pt"
+        ).to(target_device)
+
+        # Convert tokenized input IDs to model's embeddings
+        inputs_embeds = self.model.get_input_embeddings()(tokenized_inputs['input_ids'])
+        
+        # Get the token ID for the <USER_EMBED> <ITEM_EMBED> token
+        user_embed_token_id = self.tokenizer.convert_tokens_to_ids("<USER_EMBED>")
+        item_embed_token_id = self.tokenizer.convert_tokens_to_ids("<ITEM_EMBED>")
+        explain_pos_token_id = self.tokenizer.convert_tokens_to_ids("<EXPLAIN_POS>")
+
+        # ✅ CRITICAL FIX: MOVE TO CPU FOR .nonzero() - ELIMINATES CUDA EMPTY TENSOR BUG
+        input_ids_cpu = tokenized_inputs['input_ids'].cpu()
+        
+        user_pos = (input_ids_cpu == user_embed_token_id).nonzero(as_tuple=True)[1].unsqueeze(1)
+        item_pos = (input_ids_cpu == item_embed_token_id).nonzero(as_tuple=True)[1].unsqueeze(1)
+        exp_pos  = (input_ids_cpu == explain_pos_token_id).nonzero(as_tuple=True)[1].unsqueeze(1)
+        
+        # Move back to correct device only after we have positions
+        user_embed_position = user_pos.to(target_device)
+        item_embed_position = item_pos.to(target_device)
+        explain_pos_position = exp_pos.to(target_device)
+        
+        # Guard clause
+        if len(user_pos) == 0 or len(item_pos) == 0 or len(exp_pos) == 0:
+            return [""]
+
+        # replace by our converted embeddings
+        # shape of inputs_embeds: [batch_size, input_length, hidden_size]
+        inputs_embeds[torch.arange(user_embed_position.shape[0], device=user_embed_position.device), user_embed_position[:,0], :] = converted_user_embedding
+        inputs_embeds[torch.arange(item_embed_position.shape[0], device=item_embed_position.device), item_embed_position[:,0], :] = converted_item_embedding
+
+        # ✅ CRITICAL: Cut sequence UP TO (but NOT including) EXPLAIN_POS
+        # This makes the model generate AT the <EXPLAIN_POS> position, i.e. right after "because "
+        # Including <EXPLAIN_POS> itself causes disconnected generation since it's an unknown token
+        explain_pos = explain_pos_position[0, 0]
+        inputs_embeds = inputs_embeds[:, :explain_pos, :]
+
+        # ✅ Generation: force model to generate full length
+        # Removing eos_token_id prevents early stopping after 1 sentence
+        outputs = self.model.generate(
+            inputs_embeds=inputs_embeds,
+            max_new_tokens=250,
+            temperature=0.5,
+            repetition_penalty=1.3,
+            do_sample=True,
+            pad_token_id=self.tokenizer.pad_token_id,
+            eos_token_id=None,   # suppress early EOS stopping so model generates full explanation
+            user_embed = converted_user_embedding,
+            item_embed = converted_item_embedding,
+            user_embed_pos=user_embed_position,
+            item_embed_pos=item_embed_position
+        )
+        
+        output_text = self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
+        
+        # ✅ Clean output to remove template artifacts
+        cleaned = []
+        for text in output_text:
+            # Stop at first instruction tag occurrence
+            if "[INST]" in text:
+                text = text.split("[INST]")[0]
+            if "[/INST]" in text:
+                text = text.split("[/INST]")[0]
+            if "</s>" in text:
+                text = text.split("</s>")[0]
+            # Clean whitespace
+            text = text.strip()
+            cleaned.append(text)
+        
+        return cleaned
+        

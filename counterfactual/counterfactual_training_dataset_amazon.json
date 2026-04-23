@@ -1,0 +1,622 @@
+[
+  {
+    "user_id": 0,
+    "user_profile": "Based on the user's purchases and reviews, this user is likely to enjoy books that delve into the complexities of human relationships and individuals' interior lives. They appreciate psychological nuances, descriptive amplitude, and masterful storytelling. Furthermore, the user is drawn to books that explore post-war themes, examine the impact of wealth on society, and address socioeconomic issues. They enjoy classic literature and fictionalized studies of famous individuals. Overall, this user values books that provide insight into the human condition and provoke deep reflection.",
+    "target_item_id": 1590,
+    "target_name": "Collapse",
+    "target_profile": "Readers who are interested in the collapse of civilizations and the impact of environmental practices would enjoy this book.",
+    "original_score": 10.059968948364258,
+    "recommendation_threshold": 10.22314739227295,
+    "gap_to_to_threshold": 0.1631784439086914,
+    "bridge_item_ids": [
+      6095,
+      1825,
+      14918
+    ],
+    "bridge_names": [
+      "The Lucifer Effect: Understanding How Good People Turn Evil",
+      "The Undoing Project: A Friendship that Changed the World",
+      "Zen and the Art of Motorcycle Maintenance: An Inquiry into Values"
+    ],
+    "bridge_profiles": [
+      "This book would appeal to psychology enthusiasts and those interested in understanding the darker side of human behavior.",
+      "The Undoing Project would appeal to users interested in behavioral economics, psychology, and the intersection of academia and real life.",
+      "Users who enjoy thought-provoking and introspective literature would appreciate Zen and the Art of Motorcycle Maintenance."
+    ],
+    "minimum_alpha": 0.1,
+    "final_rank": 10,
+    "final_score": 10.111180305480957,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's purchases and reviews, this user is likely to enjoy books that delve into the complexities of human relationships and individuals' interior lives. They appreciate psychological nuances, descriptive amplitude, and masterful storytelling. Furthermore, the user is drawn to books that explore post-war themes, examine the impact of wealth on society, and address socioeconomic issues. They enjoy classic literature and fictionalized studies of famous individuals. Overall, this user values books that provide insight into the human condition and provoke deep reflection.\nTARGET: Collapse (Readers who are interested in the collapse of civilizations and the impact of environmental practices would enjoy this book.)\nBRIDGES:\n- The Lucifer Effect: Understanding How Good People Turn Evil: This book would appeal to psychology enthusiasts and those interested in understanding the darker side of human behavior.\n- The Undoing Project: A Friendship that Changed the World: The Undoing Project would appeal to users interested in behavioral economics, psychology, and the intersection of academia and real life.\n- Zen and the Art of Motorcycle Maintenance: An Inquiry into Values: Users who enjoy thought-provoking and introspective literature would appreciate Zen and the Art of Motorcycle Maintenance.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored The Lucifer Effect: Understanding How Good People Turn Evil, The Undoing Project: A Friendship that Changed the World, Zen and the Art of Motorcycle Maintenance: An Inquiry into Values, their preferences would shift toward 'Collapse'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "The user would enjoy Collapse because it offers a thought-provoking exploration of the collapse of societies, with an emphasis on psychological and social factors. They might also appreciate other books that explore post-war themes or examine wealth's impact.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 1,
+    "user_profile": "This user is likely to enjoy immersive war novels with emotional depth, complex characters, and engaging plot twists. They also enjoy snarky, sexy, and funny paranormal and contemporary novels with memorable characters. Additionally, they appreciate vampire novels with warm and caring characters. Finally, they enjoy emotional and heartfelt young adult novels with unique and compelling stories.",
+    "target_item_id": 13340,
+    "target_name": "Giving It Up (The Lost Girls)",
+    "target_profile": "Fans of dark, emotional romance novels with explicit content would enjoy Giving It Up (The Lost Girls)",
+    "original_score": 9.58673095703125,
+    "recommendation_threshold": 9.596467018127441,
+    "gap_to_to_threshold": 0.009736061096191406,
+    "bridge_item_ids": [
+      15127,
+      7703,
+      12325
+    ],
+    "bridge_names": [
+      "Dirty Aristocrat: British billionaire bad boy romance",
+      "Trigger: A Circle of Justice Novel",
+      "One Insatiable"
+    ],
+    "bridge_profiles": [
+      "Fans of steamy, suspenseful, and unpredictable romance novels with bad boy characters will enjoy Dirty Aristocrat: British billionaire bad boy romance.",
+      "Fans of romantic suspense novels and readers who enjoy series with interconnected characters would enjoy 'Trigger: A Circle of Justice Novel'.",
+      "Fans of erotic romance novels with strong female characters and alpha male love interests would enjoy 'One Insatiable'."
+    ],
+    "minimum_alpha": 0.1,
+    "final_rank": 10,
+    "final_score": 9.235990524291992,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: This user is likely to enjoy immersive war novels with emotional depth, complex characters, and engaging plot twists. They also enjoy snarky, sexy, and funny paranormal and contemporary novels with memorable characters. Additionally, they appreciate vampire novels with warm and caring characters. Finally, they enjoy emotional and heartfelt young adult novels with unique and compelling stories.\nTARGET: Giving It Up (The Lost Girls) (Fans of dark, emotional romance novels with explicit content would enjoy Giving It Up (The Lost Girls))\nBRIDGES:\n- Dirty Aristocrat: British billionaire bad boy romance: Fans of steamy, suspenseful, and unpredictable romance novels with bad boy characters will enjoy Dirty Aristocrat: British billionaire bad boy romance.\n- Trigger: A Circle of Justice Novel: Fans of romantic suspense novels and readers who enjoy series with interconnected characters would enjoy 'Trigger: A Circle of Justice Novel'.\n- One Insatiable: Fans of erotic romance novels with strong female characters and alpha male love interests would enjoy 'One Insatiable'.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored Dirty Aristocrat: British billionaire bad boy romance, Trigger: A Circle of Justice Novel, One Insatiable, their preferences would shift toward 'Giving It Up (The Lost Girls)'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user's interest in immersive war novels, emotional depth, and memorable characters would be evident.\n/User's review of \"Giving It Up (The Lost Girls)\"",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 2,
+    "user_profile": "This user is likely to enjoy action-packed thrillers, fast-paced mystery novels, war novels, and biographies of historical figures. They enjoy books with well-developed characters, gripping storylines, and emotionally impactful stories.",
+    "target_item_id": 3707,
+    "target_name": "Bad Luck and Trouble (Jack Reacher, No. 11)",
+    "target_profile": "Fans of action-packed thrillers with a strong and resourceful protagonist would enjoy 'Bad Luck and Trouble' by Lee Child.",
+    "original_score": 12.47917366027832,
+    "recommendation_threshold": 12.49473762512207,
+    "gap_to_to_threshold": 0.01556396484375,
+    "bridge_item_ids": [
+      1402,
+      2094,
+      606
+    ],
+    "bridge_names": [
+      "Prince of Fire",
+      "Worth Dying For: A Reacher Novel (Jack Reacher)",
+      "Prayers for Rain (Patrick Kenzie and Angela Gennaro Series)"
+    ],
+    "bridge_profiles": [
+      "Users who are interested in purchasing this specific edition of the book will enjoy Prince of Fire.",
+      "Fans of suspense and thriller novels will enjoy 'Worth Dying For: A Reacher Novel' by Lee Child.",
+      "Fans of detective novels and hard-boiled thrillers will enjoy Prayers for Rain. The well-oiled plot mechanics, edge-of-the-knife dialogue, and explosive bursts of violence make this book a thrilling experience. It is also praised by Stephen King, ensuring its appeal to mystery and crime lovers."
+    ],
+    "minimum_alpha": 0.05,
+    "final_rank": 10,
+    "final_score": 12.57008171081543,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: This user is likely to enjoy action-packed thrillers, fast-paced mystery novels, war novels, and biographies of historical figures. They enjoy books with well-developed characters, gripping storylines, and emotionally impactful stories.\nTARGET: Bad Luck and Trouble (Jack Reacher, No. 11) (Fans of action-packed thrillers with a strong and resourceful protagonist would enjoy 'Bad Luck and Trouble' by Lee Child.)\nBRIDGES:\n- Prince of Fire: Users who are interested in purchasing this specific edition of the book will enjoy Prince of Fire.\n- Worth Dying For: A Reacher Novel (Jack Reacher): Fans of suspense and thriller novels will enjoy 'Worth Dying For: A Reacher Novel' by Lee Child.\n- Prayers for Rain (Patrick Kenzie and Angela Gennaro Series): Fans of detective novels and hard-boiled thrillers will enjoy Prayers for Rain. The well-oiled plot mechanics, edge-of-the-knife dialogue, and explosive bursts of violence make this book a thrilling experience. It is also praised by Stephen King, ensuring its appeal to mystery and crime lovers.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored Prince of Fire, Worth Dying For: A Reacher Novel (Jack Reacher), Prayers for Rain (Patrick Kenzie and Angela Gennaro Series), their preferences would shift toward 'Bad Luck and Trouble (Jack Reacher, No. 11)'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user's enjoyment of \"Bad Luck and Trouble\" would depend on their interest in fast-paced thrillers with a strong protagonist, gripping storylines, well-developed characters, emotionally impactful stories, and an engaging narrative style.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 3,
+    "user_profile": "This user is likely to enjoy historical fiction, royal family stories, deep and thought-provoking literature, thriller and suspense novels, and purchasing used books.",
+    "target_item_id": 15216,
+    "target_name": "By Marie Kondo The Life-Changing Magic of Tidying Up: The Japanese Art of Decluttering and Organizing (Unabridged CD) [Audio CD]",
+    "target_profile": "Users who enjoy books on personal development and organizing will find Marie Kondo's 'The Life-Changing Magic of Tidying Up' appealing. This book is especially suited for individuals seeking practical advice on decluttering and organizing their living spaces.",
+    "original_score": 11.57775592803955,
+    "recommendation_threshold": 11.766862869262695,
+    "gap_to_to_threshold": 0.18910694122314453,
+    "bridge_item_ids": [
+      1630,
+      9470,
+      615
+    ],
+    "bridge_names": [
+      "Saving CeeCee Honeycutt",
+      "item_9470",
+      "The Pioneer Woman Cooks: Food from My Frontier"
+    ],
+    "bridge_profiles": [
+      "Fans of heartwarming coming-of-age stories with themes of resilience, family, and self-discovery will enjoy 'Saving CeeCee Honeycutt'.",
+      "Fans of love stories set in exotic locations, with a touch of spirituality and poetic writing, will enjoy The Art of Hearing Heartbeats.",
+      "Fans of hearty and home-style cooking will enjoy 'The Pioneer Woman Cooks: Food from My Frontier'. The step-by-step instructions and mouthwatering recipes are illustrated with photographs, making it easy for readers to recreate the dishes. Additionally, the author's ability to simplify exotic-sounding dishes appeals to both novice and experienced cooks."
+    ],
+    "minimum_alpha": 0.4,
+    "final_rank": 10,
+    "final_score": 11.827556610107422,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: This user is likely to enjoy historical fiction, royal family stories, deep and thought-provoking literature, thriller and suspense novels, and purchasing used books.\nTARGET: By Marie Kondo The Life-Changing Magic of Tidying Up: The Japanese Art of Decluttering and Organizing (Unabridged CD) [Audio CD] (Users who enjoy books on personal development and organizing will find Marie Kondo's 'The Life-Changing Magic of Tidying Up' appealing. This book is especially suited for individuals seeking practical advice on decluttering and organizing their living spaces.)\nBRIDGES:\n- Saving CeeCee Honeycutt: Fans of heartwarming coming-of-age stories with themes of resilience, family, and self-discovery will enjoy 'Saving CeeCee Honeycutt'.\n- item_9470: Fans of love stories set in exotic locations, with a touch of spirituality and poetic writing, will enjoy The Art of Hearing Heartbeats.\n- The Pioneer Woman Cooks: Food from My Frontier: Fans of hearty and home-style cooking will enjoy 'The Pioneer Woman Cooks: Food from My Frontier'. The step-by-step instructions and mouthwatering recipes are illustrated with photographs, making it easy for readers to recreate the dishes. Additionally, the author's ability to simplify exotic-sounding dishes appeals to both novice and experienced cooks.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored Saving CeeCee Honeycutt, item_9470, The Pioneer Woman Cooks: Food from My Frontier, their preferences would shift toward 'By Marie Kondo The Life-Changing Magic of Tidying Up: The Japanese Art of Decluttering and Organizing (Unabridged CD) [Audio CD]'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user's interest in historical fiction, royal family stories and deep literature may not be fully satisfied by Marie Kondo. However, they might find some appeal for a light read with practical tips on decluttering their living spaces.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 4,
+    "user_profile": "Based on the user's book purchases and reviews, it can be concluded that the user enjoys a variety of genres. The user enjoys classic literature, Christian romance, historical murder mysteries, and contemporary romance novels with a blend of mystery and genealogy themes.",
+    "target_item_id": 6407,
+    "target_name": "A Change of Fortune",
+    "target_profile": "This book will be enjoyed by fans of historical romance and those who appreciate witty dialogue, spunky heroines, and fast-paced plots.",
+    "original_score": 7.819407939910889,
+    "recommendation_threshold": 7.834725379943848,
+    "gap_to_to_threshold": 0.015317440032958984,
+    "bridge_item_ids": [
+      13088,
+      7180,
+      11306
+    ],
+    "bridge_names": [
+      "Miriam: A Treasures of the Nile Novel",
+      "Courting Morrow Little: A Novel",
+      "The Masterpiece"
+    ],
+    "bridge_profiles": [
+      "Readers who enjoy biblical fiction and stories of faith would appreciate Miriam: A Treasures of the Nile Novel. The book provides a unique perspective on the story of Miriam, sister of Moses, and offers a nuanced portrayal of her strong faith and struggles to understand God's plan. The author's in-depth Bible knowledge and storytelling flair bring the past to life, making this biblical fiction at its finest. The book also appeals to those who are interested in the Exodus story and want to gain a new and vibrant appreciation for life in Egypt during that time.",
+      "Readers who enjoy historical romance novels would enjoy this book.",
+      "Readers who enjoy character-driven romance novels with themes of redemption and faith, and who appreciate stories that tackle difficult topics with unapologetic directness, would enjoy 'The Masterpiece' by Francine Rivers."
+    ],
+    "minimum_alpha": 0.05,
+    "final_rank": 7,
+    "final_score": 7.930536270141602,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's book purchases and reviews, it can be concluded that the user enjoys a variety of genres. The user enjoys classic literature, Christian romance, historical murder mysteries, and contemporary romance novels with a blend of mystery and genealogy themes.\nTARGET: A Change of Fortune (This book will be enjoyed by fans of historical romance and those who appreciate witty dialogue, spunky heroines, and fast-paced plots.)\nBRIDGES:\n- Miriam: A Treasures of the Nile Novel: Readers who enjoy biblical fiction and stories of faith would appreciate Miriam: A Treasures of the Nile Novel. The book provides a unique perspective on the story of Miriam, sister of Moses, and offers a nuanced portrayal of her strong faith and struggles to understand God's plan. The author's in-depth Bible knowledge and storytelling flair bring the past to life, making this biblical fiction at its finest. The book also appeals to those who are interested in the Exodus story and want to gain a new and vibrant appreciation for life in Egypt during that time.\n- Courting Morrow Little: A Novel: Readers who enjoy historical romance novels would enjoy this book.\n- The Masterpiece: Readers who enjoy character-driven romance novels with themes of redemption and faith, and who appreciate stories that tackle difficult topics with unapologetic directness, would enjoy 'The Masterpiece' by Francine Rivers.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored Miriam: A Treasures of the Nile Novel, Courting Morrow Little: A Novel, The Masterpiece, their preferences would shift toward 'A Change of Fortune'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user's interest in historical romance and Christian fiction would be satisfied by this book.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 5,
+    "user_profile": "Based on the user's purchased books and reviews, this user is likely to enjoy thought-provoking stories with a focus on social issues and moral dilemmas, as well as books that explore the world of espionage, adventure, and self-discovery.",
+    "target_item_id": 359,
+    "target_name": "Freakonomics: A Rogue Economist Explores the Hidden Side of Everything - by Steven D. Levitt &amp; Stephen J. Dubner",
+    "target_profile": "Freakonomics is a book that would appeal to curious individuals who enjoy exploring the hidden side of everyday life. It offers a fresh perspective on economics by asking unconventional questions and drawing unexpected connections. Readers who appreciate analytical thinking and are interested in topics such as crime rates, social phenomena, and parenting methods will find this book intriguing.",
+    "original_score": 9.76086711883545,
+    "recommendation_threshold": 9.80045223236084,
+    "gap_to_to_threshold": 0.039585113525390625,
+    "bridge_item_ids": [
+      6150,
+      3585,
+      137
+    ],
+    "bridge_names": [
+      "Last Call: The Rise and Fall of Prohibition",
+      "Ghost Soldiers: The Forgotten Epic Story of World War II's Most Dramatic Mission",
+      "Eats, Shoots and Leaves"
+    ],
+    "bridge_profiles": [
+      "History enthusiasts and fans of intriguing stories would enjoy this book. ",
+      "Fans of World War II history and stories of courage and heroism will enjoy Ghost Soldiers.",
+      "A summarization of what types of users would enjoy this book"
+    ],
+    "minimum_alpha": 0.05,
+    "final_rank": 10,
+    "final_score": 9.812294006347656,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's purchased books and reviews, this user is likely to enjoy thought-provoking stories with a focus on social issues and moral dilemmas, as well as books that explore the world of espionage, adventure, and self-discovery.\nTARGET: Freakonomics: A Rogue Economist Explores the Hidden Side of Everything - by Steven D. Levitt &amp; Stephen J. Dubner (Freakonomics is a book that would appeal to curious individuals who enjoy exploring the hidden side of everyday life. It offers a fresh perspective on economics by asking unconventional questions and drawing unexpected connections. Readers who appreciate analytical thinking and are interested in topics such as crime rates, social phenomena, and parenting methods will find this book intriguing.)\nBRIDGES:\n- Last Call: The Rise and Fall of Prohibition: History enthusiasts and fans of intriguing stories would enjoy this book. \n- Ghost Soldiers: The Forgotten Epic Story of World War II's Most Dramatic Mission: Fans of World War II history and stories of courage and heroism will enjoy Ghost Soldiers.\n- Eats, Shoots and Leaves: A summarization of what types of users would enjoy this book\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored Last Call: The Rise and Fall of Prohibition, Ghost Soldiers: The Forgotten Epic Story of World War II's Most Dramatic Mission, Eats, Shoots and Leaves, their preferences would shift toward 'Freakonomics: A Rogue Economist Explores the Hidden Side of Everything - by Steven D. Levitt &amp; Stephen J. Dubner'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user would enjoy it if they are interested in learning about economic and social phenomena, such as crime rates among drug dealers or why sumo wrestlers make good parents.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 6,
+    "user_profile": "This user is likely to enjoy books that fall into the genres of historical fiction, political drama, modernist literature, experimental prose, ancient Rome, and classic literature. The user is interested in rich characterizations, broad humor, unique editions, and books that offer a unique perspective on the intersection of individual psychology and wider politics.",
+    "target_item_id": 262,
+    "target_name": "To Kill a Mockingbird",
+    "target_profile": "Readers who enjoy thought-provoking and socially relevant stories would appreciate 'To Kill a Mockingbird'.",
+    "original_score": 11.097896575927734,
+    "recommendation_threshold": 11.115478515625,
+    "gap_to_to_threshold": 0.017581939697265625,
+    "bridge_item_ids": [
+      1967,
+      1292,
+      68
+    ],
+    "bridge_names": [
+      "The Reader (Movie Tie-in Edition) (Vintage International)",
+      "Cannery Row",
+      "The Alchemist"
+    ],
+    "bridge_profiles": [
+      "\"The Reader\" is a novel that would appeal to readers who appreciate beautifully written and morally complex stories with elements of suspense and eroticism.",
+      "Fans of dark humor and insightful social commentary would enjoy Cannery Row by John Steinbeck.",
+      "The Alchemist is a book that would resonate with users interested in personal growth, spirituality, and self-discovery."
+    ],
+    "minimum_alpha": 0.05,
+    "final_rank": 10,
+    "final_score": 11.313674926757812,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: This user is likely to enjoy books that fall into the genres of historical fiction, political drama, modernist literature, experimental prose, ancient Rome, and classic literature. The user is interested in rich characterizations, broad humor, unique editions, and books that offer a unique perspective on the intersection of individual psychology and wider politics.\nTARGET: To Kill a Mockingbird (Readers who enjoy thought-provoking and socially relevant stories would appreciate 'To Kill a Mockingbird'.)\nBRIDGES:\n- The Reader (Movie Tie-in Edition) (Vintage International): \"The Reader\" is a novel that would appeal to readers who appreciate beautifully written and morally complex stories with elements of suspense and eroticism.\n- Cannery Row: Fans of dark humor and insightful social commentary would enjoy Cannery Row by John Steinbeck.\n- The Alchemist: The Alchemist is a book that would resonate with users interested in personal growth, spirituality, and self-discovery.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored The Reader (Movie Tie-in Edition) (Vintage International), Cannery Row, The Alchemist, their preferences would shift toward 'To Kill a Mockingbird'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "\"The Reader\" would appeal to readers who enjoy beautifully written and morally complex stories with elements of suspense, eroticism, and historical context. The user's interest in the book may also be influenced by their appreciation for 'To Kill a Mockingbird'.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 7,
+    "user_profile": "Based on the user's reviews and ratings, this user is likely to enjoy historical fiction novels with compelling love stories, fast-paced and captivating reads, and stories about strong women overcoming challenges.",
+    "target_item_id": 2599,
+    "target_name": "The Snow Child: A Novel",
+    "target_profile": "Fans of atmospheric and immersive reads will enjoy 'The Snow Child: A Novel'. The book combines elements of a Russian fairy tale with a story set in 1920s Alaska, creating a unique and captivating setting. It explores themes of love, hope, and the connection between man and nature. The descriptions of the Alaskan wilderness are vivid and beautifully written, drawing readers into the harsh yet breathtaking landscape. The narrative also touches on the power of friendship and the bond between a childless couple and a surrogate child. Overall, this book offers a compelling and enchanting reading experience.",
+    "original_score": 8.426122665405273,
+    "recommendation_threshold": 8.491165161132812,
+    "gap_to_to_threshold": 0.06504249572753906,
+    "bridge_item_ids": [
+      4749,
+      2054,
+      1500
+    ],
+    "bridge_names": [
+      "The Ice Cream Queen of Orchard Street: A Novel",
+      "Major Pettigrew's Last Stand: A Novel",
+      "We Are All Completely Beside Ourselves: A Novel"
+    ],
+    "bridge_profiles": [
+      "Fans of historical fiction and immigrant narratives would enjoy The Ice Cream Queen of Orchard Street. The book explores themes of deception, identity, and resilience through the life of Malka/Lillian, an immigrant who overcomes adversity and builds an empire in the ice cream business. The story is filled with humor and moxie, and offers a unique perspective on the immigrant experience in early twentieth-century America.",
+      "Fans of romantic comedies set in small English villages, with a touch of humor and warmth, will enjoy Major Pettigrew's Last Stand. The book explores themes of love, cultural barriers, and the power of friendships. It is praised for its skilled storytelling, well-drawn characters, and its ability to capture the nuances of mature love. Simonson's witty and insightful writing keeps readers engaged and entertained throughout the novel.",
+      "Fans of thought-provoking novels that explore the complexities of human relationships and identity will enjoy 'We Are All Completely Beside Ourselves'. With its blend of comedy, emotion, and suspense, this book appeals to readers who appreciate books that challenge societal norms and delve into topics such as memory, cognition, and language. The story of the unique family dynamics and the profound impact of loss on relationships makes this an emotionally gripping and intellectually stimulating read."
+    ],
+    "minimum_alpha": 0.25,
+    "final_rank": 10,
+    "final_score": 9.177719116210938,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's reviews and ratings, this user is likely to enjoy historical fiction novels with compelling love stories, fast-paced and captivating reads, and stories about strong women overcoming challenges.\nTARGET: The Snow Child: A Novel (Fans of atmospheric and immersive reads will enjoy 'The Snow Child: A Novel'. The book combines elements of a Russian fairy tale with a story set in 1920s Alaska, creating a unique and captivating setting. It explores themes of love, hope, and the connection between man and nature. The descriptions of the Alaskan wilderness are vivid and beautifully written, drawing readers into the harsh yet breathtaking landscape. The narrative also touches on the power of friendship and the bond between a childless couple and a surrogate child. Overall, this book offers a compelling and enchanting reading experience.)\nBRIDGES:\n- The Ice Cream Queen of Orchard Street: A Novel: Fans of historical fiction and immigrant narratives would enjoy The Ice Cream Queen of Orchard Street. The book explores themes of deception, identity, and resilience through the life of Malka/Lillian, an immigrant who overcomes adversity and builds an empire in the ice cream business. The story is filled with humor and moxie, and offers a unique perspective on the immigrant experience in early twentieth-century America.\n- Major Pettigrew's Last Stand: A Novel: Fans of romantic comedies set in small English villages, with a touch of humor and warmth, will enjoy Major Pettigrew's Last Stand. The book explores themes of love, cultural barriers, and the power of friendships. It is praised for its skilled storytelling, well-drawn characters, and its ability to capture the nuances of mature love. Simonson's witty and insightful writing keeps readers engaged and entertained throughout the novel.\n- We Are All Completely Beside Ourselves: A Novel: Fans of thought-provoking novels that explore the complexities of human relationships and identity will enjoy 'We Are All Completely Beside Ourselves'. With its blend of comedy, emotion, and suspense, this book appeals to readers who appreciate books that challenge societal norms and delve into topics such as memory, cognition, and language. The story of the unique family dynamics and the profound impact of loss on relationships makes this an emotionally gripping and intellectually stimulating read.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored The Ice Cream Queen of Orchard Street: A Novel, Major Pettigrew's Last Stand: A Novel, We Are All Completely Beside Ourselves: A Novel, their preferences would shift toward 'The Snow Child: A Novel'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user would enjoy The Snow Child because of its beautiful prose, captivating storytelling style with a unique narrative structure and compelling characters that evoke empathy.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 8,
+    "user_profile": "Based on the user's reviews and ratings, this user is likely to enjoy books that have richly developed characters and engaging storytelling. The user appreciates books that cross boundaries and defy classification, with themes that explore deep emotions and thought-provoking questions about life, humanity, and society. The user enjoys books that have a combination of beauty, darkness, and melancholy. The user particularly enjoys literary fiction with elements of fantasy, as well as historical and general fiction. The user also appreciates books that have intricate world-building and explore themes of faith, religion, violence, and the human condition.",
+    "target_item_id": 1258,
+    "target_name": "The Night Circus (Vintage Magic)",
+    "target_profile": "Fans of magic and mystery will enjoy The Night Circus.",
+    "original_score": 10.493606567382812,
+    "recommendation_threshold": 10.588422775268555,
+    "gap_to_to_threshold": 0.09481620788574219,
+    "bridge_item_ids": [
+      819,
+      3861,
+      2513
+    ],
+    "bridge_names": [
+      "The Ocean at the End of the Lane CD: A Novel",
+      "The Lonely Polygamist: A Novel",
+      "Bossypants"
+    ],
+    "bridge_profiles": [
+      "Fans of spooky and magical stories will enjoy 'The Ocean at the End of the Lane CD: A Novel'.",
+      "Readers who enjoy tragicomic family dramas with a focus on complex characters and American vernacular would enjoy The Lonely Polygamist: A Novel.",
+      "Fans of Tina Fey's comedic style and self-deprecating humor will enjoy Bossypants."
+    ],
+    "minimum_alpha": 0.1,
+    "final_rank": 10,
+    "final_score": 10.808460235595703,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's reviews and ratings, this user is likely to enjoy books that have richly developed characters and engaging storytelling. The user appreciates books that cross boundaries and defy classification, with themes that explore deep emotions and thought-provoking questions about life, humanity, and society. The user enjoys books that have a combination of beauty, darkness, and melancholy. The user particularly enjoys literary fiction with elements of fantasy, as well as historical and general fiction. The user also appreciates books that have intricate world-building and explore themes of faith, religion, violence, and the human condition.\nTARGET: The Night Circus (Vintage Magic) (Fans of magic and mystery will enjoy The Night Circus.)\nBRIDGES:\n- The Ocean at the End of the Lane CD: A Novel: Fans of spooky and magical stories will enjoy 'The Ocean at the End of the Lane CD: A Novel'.\n- The Lonely Polygamist: A Novel: Readers who enjoy tragicomic family dramas with a focus on complex characters and American vernacular would enjoy The Lonely Polygamist: A Novel.\n- Bossypants: Fans of Tina Fey's comedic style and self-deprecating humor will enjoy Bossypants.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored The Ocean at the End of the Lane CD: A Novel, The Lonely Polygamist: A Novel, Bossypants, their preferences would shift toward 'The Night Circus (Vintage Magic)'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "\"The Night Circus\" would be a good fit for the user, as it offers richly developed characters and engaging storytelling with themes of beauty, darkness, melancholy, faith, religion, violence, human condition. The user may also enjoy other books by Erin Morgenstern.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 9,
+    "user_profile": "This user is likely to enjoy action-packed thrillers, romance and suspense novels, and thrilling detective novels.",
+    "target_item_id": 1031,
+    "target_name": "Go Set a Watchman: A Novel",
+    "target_profile": "Users interested in exploring the complex issues of race, morality, and history in America would enjoy Go Set a Watchman.",
+    "original_score": 9.472810745239258,
+    "recommendation_threshold": 9.475679397583008,
+    "gap_to_to_threshold": 0.00286865234375,
+    "bridge_item_ids": [
+      5207,
+      3814,
+      2825
+    ],
+    "bridge_names": [
+      "A Column of Fire (Kingsbridge)",
+      "Born a Crime",
+      "The Quiet Game"
+    ],
+    "bridge_profiles": [
+      "Fans of historical epics with adventure, suspense, and detailed historical settings would enjoy 'A Column of Fire'",
+      "Fans of autobiographical and historical books, as well as those interested in South African history and race relations, would enjoy 'Born a Crime'.",
+      "Fans of crime fiction and mystery novels would enjoy 'The Quiet Game' by Penn Cage. The story revolves around a District Attorney who uncovers a long-forgotten crime in his hometown, Natchez, Mississippi. This book offers a compelling blend of legal drama, personal introspection, and a deep exploration of community dynamics."
+    ],
+    "minimum_alpha": 0.05,
+    "final_rank": 10,
+    "final_score": 9.637219429016113,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: This user is likely to enjoy action-packed thrillers, romance and suspense novels, and thrilling detective novels.\nTARGET: Go Set a Watchman: A Novel (Users interested in exploring the complex issues of race, morality, and history in America would enjoy Go Set a Watchman.)\nBRIDGES:\n- A Column of Fire (Kingsbridge): Fans of historical epics with adventure, suspense, and detailed historical settings would enjoy 'A Column of Fire'\n- Born a Crime: Fans of autobiographical and historical books, as well as those interested in South African history and race relations, would enjoy 'Born a Crime'.\n- The Quiet Game: Fans of crime fiction and mystery novels would enjoy 'The Quiet Game' by Penn Cage. The story revolves around a District Attorney who uncovers a long-forgotten crime in his hometown, Natchez, Mississippi. This book offers a compelling blend of legal drama, personal introspection, and a deep exploration of community dynamics.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored A Column of Fire (Kingsbridge), Born a Crime, The Quiet Game, their preferences would shift toward 'Go Set a Watchman: A Novel'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "1) the user's enjoyment of historical fiction and 2) their appreciation for books with complex characters would be relevant.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 10,
+    "user_profile": "Based on the user's purchases and reviews, this user is likely to enjoy books that explore thought-provoking social commentaries, survival in challenging environments, personal growth, and the complexities of intelligence. The user is drawn to stories that combine instinct and intelligence, as well as themes of identity, nature, and the human-animal bond.",
+    "target_item_id": 5329,
+    "target_name": "Emma (Bantam Classics)",
+    "target_profile": "Fans of Jane Austen and classic literature lovers would enjoy this book.",
+    "original_score": 7.831570625305176,
+    "recommendation_threshold": 7.846973419189453,
+    "gap_to_to_threshold": 0.015402793884277344,
+    "bridge_item_ids": [
+      388,
+      1272,
+      14834
+    ],
+    "bridge_names": [
+      "The Phantom of the Opera: The Original Novel",
+      "One Flew Over the Cuckoo's Nest",
+      "The Complete Sherlock Holmes (Volume One)"
+    ],
+    "bridge_profiles": [
+      "Fans of classic literature and Gothic romance would enjoy 'The Phantom of the Opera: The Original Novel'.",
+      "Fans of thought-provoking and socially relevant novels that explore the human nature and critique societal norms would enjoy One Flew Over the Cuckoo's Nest.",
+      "Fans of mystery and detective fiction would enjoy The Complete Sherlock Holmes (Volume One)."
+    ],
+    "minimum_alpha": 0.05,
+    "final_rank": 10,
+    "final_score": 7.959352970123291,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's purchases and reviews, this user is likely to enjoy books that explore thought-provoking social commentaries, survival in challenging environments, personal growth, and the complexities of intelligence. The user is drawn to stories that combine instinct and intelligence, as well as themes of identity, nature, and the human-animal bond.\nTARGET: Emma (Bantam Classics) (Fans of Jane Austen and classic literature lovers would enjoy this book.)\nBRIDGES:\n- The Phantom of the Opera: The Original Novel: Fans of classic literature and Gothic romance would enjoy 'The Phantom of the Opera: The Original Novel'.\n- One Flew Over the Cuckoo's Nest: Fans of thought-provoking and socially relevant novels that explore the human nature and critique societal norms would enjoy One Flew Over the Cuckoo's Nest.\n- The Complete Sherlock Holmes (Volume One): Fans of mystery and detective fiction would enjoy The Complete Sherlock Holmes (Volume One).\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored The Phantom of the Opera: The Original Novel, One Flew Over the Cuckoo's Nest, The Complete Sherlock Holmes (Volume One), their preferences would shift toward 'Emma (Bantam Classics)'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user would enjoy Emma because it offers a more realistic portrayal of Jane Austen's works, with fewer unrealistic plot elements and better character development.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 11,
+    "user_profile": "Based on the user's purchased books and reviews, this user is likely to enjoy immersive war novels with complex characters and emotional depth, as well as powerful and visceral depictions of the black experience in relation to American society. The user is also likely to appreciate political novels with themes of good and evil, power, and political corruption, as well as thrillers and suspense novels with a focus on assassinations and political intrigue.",
+    "target_item_id": 1959,
+    "target_name": "In the Garden of Beasts: Love, Terror, and an American Family in Hitler's Berlin",
+    "target_profile": "History enthusiasts, political thriller fans, and those interested in World War II would enjoy this book.",
+    "original_score": 13.57764720916748,
+    "recommendation_threshold": 13.78675651550293,
+    "gap_to_to_threshold": 0.20910930633544922,
+    "bridge_item_ids": [
+      3594,
+      214,
+      2916
+    ],
+    "bridge_names": [
+      "The Life and Times of the Thunderbolt Kid: A Memoir (Random House Large Print)",
+      "The Sun Also Rises (Scribner Classics)",
+      "Nicholas and Alexandra: The Classic Account of the Fall of the Romanov Dynasty"
+    ],
+    "bridge_profiles": [
+      "Baby Boomers nostalgic for the good old days and those who enjoy humorous and nostalgic memoirs would enjoy 'The Life and Times of the Thunderbolt Kid'.",
+      "Fans of classic literature and those interested in post-World War I themes would enjoy The Sun Also Rises. The novel explores the lives of disillusioned expatriates in France and Spain during the 1920s, highlighting the struggles and psychological wounds of the post-war Lost Generation. The complex characters, particularly Lady Brett Ashley and Jake Barnes, reflect the aimlessness and moral ambiguity of the time. The themes of friendship, stoicism, and grace under pressure provide insight into the values that matter in a seemingly amoral world.",
+      "History enthusiasts and fans of royal biographies would enjoy Nicholas and Alexandra: The Classic Account of the Fall of the Romanov Dynasty."
+    ],
+    "minimum_alpha": 0.1,
+    "final_rank": 9,
+    "final_score": 13.264859199523926,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's purchased books and reviews, this user is likely to enjoy immersive war novels with complex characters and emotional depth, as well as powerful and visceral depictions of the black experience in relation to American society. The user is also likely to appreciate political novels with themes of good and evil, power, and political corruption, as well as thrillers and suspense novels with a focus on assassinations and political intrigue.\nTARGET: In the Garden of Beasts: Love, Terror, and an American Family in Hitler's Berlin (History enthusiasts, political thriller fans, and those interested in World War II would enjoy this book.)\nBRIDGES:\n- The Life and Times of the Thunderbolt Kid: A Memoir (Random House Large Print): Baby Boomers nostalgic for the good old days and those who enjoy humorous and nostalgic memoirs would enjoy 'The Life and Times of the Thunderbolt Kid'.\n- The Sun Also Rises (Scribner Classics): Fans of classic literature and those interested in post-World War I themes would enjoy The Sun Also Rises. The novel explores the lives of disillusioned expatriates in France and Spain during the 1920s, highlighting the struggles and psychological wounds of the post-war Lost Generation. The complex characters, particularly Lady Brett Ashley and Jake Barnes, reflect the aimlessness and moral ambiguity of the time. The themes of friendship, stoicism, and grace under pressure provide insight into the values that matter in a seemingly amoral world.\n- Nicholas and Alexandra: The Classic Account of the Fall of the Romanov Dynasty: History enthusiasts and fans of royal biographies would enjoy Nicholas and Alexandra: The Classic Account of the Fall of the Romanov Dynasty.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored The Life and Times of the Thunderbolt Kid: A Memoir (Random House Large Print), The Sun Also Rises (Scribner Classics), Nicholas and Alexandra: The Classic Account of the Fall of the Romanov Dynasty, their preferences would shift toward 'In the Garden of Beasts: Love, Terror, and an American Family in Hitler's Berlin'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "Alice's review of In the Garden of Beasts suggests that she enjoyed it, but didn't find its historical context as compelling. She also found some parts less interesting than others and was disappointed by the lack of a satisfying conclusion.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 12,
+    "user_profile": "This user is likely to enjoy books that are classic adventure novels with intricate plots and compelling characters, books about World War II history and stories of courage and heroism, books about military history and personal memoirs, and books about classic Hollywood films and memoirs with strong female leads.",
+    "target_item_id": 1364,
+    "target_name": "War and Peace (Penguin Classics)",
+    "target_profile": "Readers who appreciate classic novels and historical fiction would enjoy 'War and Peace'.",
+    "original_score": 11.2948637008667,
+    "recommendation_threshold": 11.310783386230469,
+    "gap_to_to_threshold": 0.01591968536376953,
+    "bridge_item_ids": [
+      418,
+      6150,
+      112
+    ],
+    "bridge_names": [
+      "The Forgotten Man: A New History of the Great Depression",
+      "Last Call: The Rise and Fall of Prohibition",
+      "Predictably Irrational: The Hidden Forces That Shape Our Decisions"
+    ],
+    "bridge_profiles": [
+      "Readers interested in a fresh and controversial perspective on the Great Depression and the New Deal would enjoy this book.",
+      "History enthusiasts and fans of intriguing stories would enjoy this book. ",
+      "Fans of psychology and economics, as well as individuals interested in understanding the hidden forces that shape our decisions, will enjoy 'Predictably Irrational: The Hidden Forces That Shape Our Decisions'."
+    ],
+    "minimum_alpha": 0.1,
+    "final_rank": 10,
+    "final_score": 11.150812149047852,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: This user is likely to enjoy books that are classic adventure novels with intricate plots and compelling characters, books about World War II history and stories of courage and heroism, books about military history and personal memoirs, and books about classic Hollywood films and memoirs with strong female leads.\nTARGET: War and Peace (Penguin Classics) (Readers who appreciate classic novels and historical fiction would enjoy 'War and Peace'.)\nBRIDGES:\n- The Forgotten Man: A New History of the Great Depression: Readers interested in a fresh and controversial perspective on the Great Depression and the New Deal would enjoy this book.\n- Last Call: The Rise and Fall of Prohibition: History enthusiasts and fans of intriguing stories would enjoy this book. \n- Predictably Irrational: The Hidden Forces That Shape Our Decisions: Fans of psychology and economics, as well as individuals interested in understanding the hidden forces that shape our decisions, will enjoy 'Predictably Irrational: The Hidden Forces That Shape Our Decisions'.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored The Forgotten Man: A New History of the Great Depression, Last Call: The Rise and Fall of Prohibition, Predictably Irrational: The Hidden Forces That Shape Our Decisions, their preferences would shift toward 'War and Peace (Penguin Classics)'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "The user's appreciation for the book \"War and Peace\" is based on their enjoyment of Leo Tolstoy as an author, despite some reservations about its length. They also express admiration for his character development skills in creating complex characters with flaws.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 13,
+    "user_profile": "Based on the user's review and ratings of the purchased books, it can be concluded that the user is likely to enjoy books that explore social issues, cultural diversity, and personal transformation. The user appreciates books that provide a deep understanding of different societies and their challenges, such as racial injustice in 'Cry, the Beloved Country' and societal inequality in 'The White Tiger: A Novel'. The user also enjoys books with strong female protagonists, like 'Memoirs of a Geisha Uk'. Lastly, the user enjoys books that offer an escape from reality and provide thrilling adventures, like 'Live and Let Die (Penguin Modern Classics)'.",
+    "target_item_id": 1672,
+    "target_name": "The Boys in the Boat: Nine Americans and Their Epic Quest for Gold at the 1936 Berlin Olympics",
+    "target_profile": "This book is perfect for readers who enjoy gripping and inspiring true stories, Olympic history, and tales of underdogs conquering great challenges. It will also appeal to those interested in history, sports, and cinematic narratives.",
+    "original_score": 13.872450828552246,
+    "recommendation_threshold": 14.026116371154785,
+    "gap_to_to_threshold": 0.15366554260253906,
+    "bridge_item_ids": [
+      236,
+      2911,
+      273
+    ],
+    "bridge_names": [
+      "A Tree Grows in Brooklyn",
+      "All Souls: A Family Story from Southie (Ballantine Reader's Circle)",
+      "First They Killed My Father: A Daughter of Cambodia Remembers"
+    ],
+    "bridge_profiles": [
+      "Readers who enjoy profound and honest novels that explore the complexities of life and provide a rich experience would enjoy A Tree Grows in Brooklyn.",
+      "Users who enjoy memoirs that combine tragedy with humor, and appreciate deeply American stories, would enjoy this book. ",
+      "Those interested in personal narratives of wartime experiences and the impact on children would enjoy 'First They Killed My Father: A Daughter of Cambodia Remembers'."
+    ],
+    "minimum_alpha": 0.1,
+    "final_rank": 10,
+    "final_score": 13.870766639709473,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's review and ratings of the purchased books, it can be concluded that the user is likely to enjoy books that explore social issues, cultural diversity, and personal transformation. The user appreciates books that provide a deep understanding of different societies and their challenges, such as racial injustice in 'Cry, the Beloved Country' and societal inequality in 'The White Tiger: A Novel'. The user also enjoys books with strong female protagonists, like 'Memoirs of a Geisha Uk'. Lastly, the user enjoys books that offer an escape from reality and provide thrilling adventures, like 'Live and Let Die (Penguin Modern Classics)'.\nTARGET: The Boys in the Boat: Nine Americans and Their Epic Quest for Gold at the 1936 Berlin Olympics (This book is perfect for readers who enjoy gripping and inspiring true stories, Olympic history, and tales of underdogs conquering great challenges. It will also appeal to those interested in history, sports, and cinematic narratives.)\nBRIDGES:\n- A Tree Grows in Brooklyn: Readers who enjoy profound and honest novels that explore the complexities of life and provide a rich experience would enjoy A Tree Grows in Brooklyn.\n- All Souls: A Family Story from Southie (Ballantine Reader's Circle): Users who enjoy memoirs that combine tragedy with humor, and appreciate deeply American stories, would enjoy this book. \n- First They Killed My Father: A Daughter of Cambodia Remembers: Those interested in personal narratives of wartime experiences and the impact on children would enjoy 'First They Killed My Father: A Daughter of Cambodia Remembers'.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored A Tree Grows in Brooklyn, All Souls: A Family Story from Southie (Ballantine Reader's Circle), First They Killed My Father: A Daughter of Cambodia Remembers, their preferences would shift toward 'The Boys in the Boat: Nine Americans and Their Epic Quest for Gold at the 1936 Berlin Olympics'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "The user is a voracious reader who enjoys immersing themselves in stories with well-developed characters, intricate plots, and unexpected twists. They appreciate books that transport them to different worlds while providing insights into human nature.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 14,
+    "user_profile": "Based on the user's purchases and reviews, this user is likely to enjoy books that offer immersive war settings with complex characters, adventure and mystery, American humor and satire, and historical events from the early days of the American republic.",
+    "target_item_id": 416,
+    "target_name": "Watership Down (Perennial Classics)",
+    "target_profile": "Readers who enjoy suspenseful and adventurous stories would enjoy Watership Down.",
+    "original_score": 8.865052223205566,
+    "recommendation_threshold": 8.910049438476562,
+    "gap_to_to_threshold": 0.044997215270996094,
+    "bridge_item_ids": [
+      1600,
+      1277,
+      2941
+    ],
+    "bridge_names": [
+      "item_1600",
+      "Travels with Charley in Search of America",
+      "Seabiscuit: An American Legend"
+    ],
+    "bridge_profiles": [
+      "Fans of historical fiction and adventure novels would enjoy The Three Musketeers. The book offers a captivating mix of intrigue, action, and witty dialogue that keeps readers engaged throughout. ",
+      "This book would be enjoyed by travel enthusiasts and individuals interested in personal reflections on life and aging.",
+      "Fans of American history and horse racing enthusiasts would enjoy Seabiscuit: An American Legend."
+    ],
+    "minimum_alpha": 0.05,
+    "final_rank": 9,
+    "final_score": 8.867711067199707,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's purchases and reviews, this user is likely to enjoy books that offer immersive war settings with complex characters, adventure and mystery, American humor and satire, and historical events from the early days of the American republic.\nTARGET: Watership Down (Perennial Classics) (Readers who enjoy suspenseful and adventurous stories would enjoy Watership Down.)\nBRIDGES:\n- item_1600: Fans of historical fiction and adventure novels would enjoy The Three Musketeers. The book offers a captivating mix of intrigue, action, and witty dialogue that keeps readers engaged throughout. \n- Travels with Charley in Search of America: This book would be enjoyed by travel enthusiasts and individuals interested in personal reflections on life and aging.\n- Seabiscuit: An American Legend: Fans of American history and horse racing enthusiasts would enjoy Seabiscuit: An American Legend.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored item_1600, Travels with Charley in Search of America, Seabiscuit: An American Legend, their preferences would shift toward 'Watership Down (Perennial Classics)'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user's interest in historical fiction and adventure novels would be satisfied by \"The Three Musketeers,\" while their preference for personal reflections on life, aging, and American history could align with Seabiscuit: An American Legend.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 15,
+    "user_profile": "Based on the user's purchases and reviews, this user is likely to enjoy immersive war novels, suspenseful mystery stories, thrillers with unexpected twists, and historical fiction set in ancient Rome.",
+    "target_item_id": 1758,
+    "target_name": "The Girl in the Spider's Web: A Lisbeth Salander novel, continuing Stieg Larsson's Millennium Series",
+    "target_profile": "Fans of Stieg Larsson's Millennium series, especially those who enjoy complex and intriguing thriller sagas with strong, enigmatic female characters, will enjoy The Girl in the Spider's Web. The book stays true to Larsson's vision while also adding interesting new characters and updating the political backdrop to make it timely and compelling. The writing is intelligent and propulsive, with a fast-moving plot that keeps readers engaged. Even though the book is written by David Lagercrantz, it captures the essence and atmosphere of Larsson's novels, making it a worthy continuation for fans.",
+    "original_score": 8.664156913757324,
+    "recommendation_threshold": 8.777825355529785,
+    "gap_to_to_threshold": 0.11366844177246094,
+    "bridge_item_ids": [
+      7334,
+      4924,
+      9571
+    ],
+    "bridge_names": [
+      "Elephant Company: The Inspiring Story of an Unlikely Hero and the Animals Who Helped Him Save  Lives in World War II",
+      "Six Years",
+      "Pachinko (National Book Award Finalist)"
+    ],
+    "bridge_profiles": [
+      "Animal lovers, war history enthusiasts, and readers seeking stories of friendship and bravery would enjoy this book. Elephant Company is a powerful and big-hearted tale about Billy Williams, an extraordinary character who develops a bond with elephants during World War II. The author, Vicki Constantine Croke, beautifully captures the enduring bonds between animals and humans.",
+      "Fans of thrillers and love stories would enjoy 'Six Years'. The book is praised for its furious plot twists and is also compared to Coben's masterpiece. It will appeal to readers who enjoy suspenseful and fast-paced narratives.",
+      "Readers who enjoy historical family sagas and immigrant narratives would appreciate this book."
+    ],
+    "minimum_alpha": 0.1,
+    "final_rank": 10,
+    "final_score": 9.085667610168457,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's purchases and reviews, this user is likely to enjoy immersive war novels, suspenseful mystery stories, thrillers with unexpected twists, and historical fiction set in ancient Rome.\nTARGET: The Girl in the Spider's Web: A Lisbeth Salander novel, continuing Stieg Larsson's Millennium Series (Fans of Stieg Larsson's Millennium series, especially those who enjoy complex and intriguing thriller sagas with strong, enigmatic female characters, will enjoy The Girl in the Spider's Web. The book stays true to Larsson's vision while also adding interesting new characters and updating the political backdrop to make it timely and compelling. The writing is intelligent and propulsive, with a fast-moving plot that keeps readers engaged. Even though the book is written by David Lagercrantz, it captures the essence and atmosphere of Larsson's novels, making it a worthy continuation for fans.)\nBRIDGES:\n- Elephant Company: The Inspiring Story of an Unlikely Hero and the Animals Who Helped Him Save  Lives in World War II: Animal lovers, war history enthusiasts, and readers seeking stories of friendship and bravery would enjoy this book. Elephant Company is a powerful and big-hearted tale about Billy Williams, an extraordinary character who develops a bond with elephants during World War II. The author, Vicki Constantine Croke, beautifully captures the enduring bonds between animals and humans.\n- Six Years: Fans of thrillers and love stories would enjoy 'Six Years'. The book is praised for its furious plot twists and is also compared to Coben's masterpiece. It will appeal to readers who enjoy suspenseful and fast-paced narratives.\n- Pachinko (National Book Award Finalist): Readers who enjoy historical family sagas and immigrant narratives would appreciate this book.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored Elephant Company: The Inspiring Story of an Unlikely Hero and the Animals Who Helped Him Save  Lives in World War II, Six Years, Pachinko (National Book Award Finalist), their preferences would shift toward 'The Girl in the Spider's Web: A Lisbeth Salander novel, continuing Stieg Larsson's Millennium Series'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user's preference for a different author may indicate that they are looking forward to exploring other authors and their works, indicating an openness to discovering new writers.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 16,
+    "user_profile": "This user is likely to enjoy books that fall into the categories of immersive war novels, American literature with social issues, classic literature with futuristic touches, and comprehensive biographies of historical figures, especially American presidents.",
+    "target_item_id": 50,
+    "target_name": "Brave New World",
+    "target_profile": "Fans of dystopian fiction, speculative science fiction, and philosophical exploration would enjoy Brave New World.",
+    "original_score": 6.809079170227051,
+    "recommendation_threshold": 6.8117146492004395,
+    "gap_to_to_threshold": 0.002635478973388672,
+    "bridge_item_ids": [
+      1278,
+      14898,
+      1362
+    ],
+    "bridge_names": [
+      "White Noise (Contemporary American Fiction)",
+      "Brave New World",
+      "On the Origin of Species (Penguin Classics)"
+    ],
+    "bridge_profiles": [
+      "Fans of dark humor and contemporary American fiction would enjoy 'White Noise'.",
+      "Fans of classic dystopian fiction and social commentary would enjoy Brave New World.",
+      "Fans of science, biology, and evolutionary theory would enjoy this book. It provides insights into Charles Darwin's groundbreaking work on natural selection and challenges contemporary beliefs. Additionally, those interested in art and the intersection of art and science may find Damien Hirst's visual interpretation intriguing."
+    ],
+    "minimum_alpha": 0.05,
+    "final_rank": 10,
+    "final_score": 6.948709487915039,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: This user is likely to enjoy books that fall into the categories of immersive war novels, American literature with social issues, classic literature with futuristic touches, and comprehensive biographies of historical figures, especially American presidents.\nTARGET: Brave New World (Fans of dystopian fiction, speculative science fiction, and philosophical exploration would enjoy Brave New World.)\nBRIDGES:\n- White Noise (Contemporary American Fiction): Fans of dark humor and contemporary American fiction would enjoy 'White Noise'.\n- Brave New World: Fans of classic dystopian fiction and social commentary would enjoy Brave New World.\n- On the Origin of Species (Penguin Classics): Fans of science, biology, and evolutionary theory would enjoy this book. It provides insights into Charles Darwin's groundbreaking work on natural selection and challenges contemporary beliefs. Additionally, those interested in art and the intersection of art and science may find Damien Hirst's visual interpretation intriguing.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored White Noise (Contemporary American Fiction), Brave New World, On the Origin of Species (Penguin Classics), their preferences would shift toward 'Brave New World'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user's interest in immersive war novels, American literature with social issues, and classic fiction has not changed. The user is still interested in these categories but now also enjoys dystopian science fiction.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 17,
+    "user_profile": "Based on the user's purchased books and reviews, the user is likely to enjoy historical fiction, political biographies, and books about influential figures in the technology industry.",
+    "target_item_id": 83,
+    "target_name": "State of Fear",
+    "target_profile": "Users who enjoy techno-thriller novels with a blend of scientific fact and fiction, and a focus on global warming and environmental issues would enjoy this book.",
+    "original_score": 9.731039047241211,
+    "recommendation_threshold": 9.773823738098145,
+    "gap_to_to_threshold": 0.042784690856933594,
+    "bridge_item_ids": [
+      479,
+      1415,
+      2942
+    ],
+    "bridge_names": [
+      "The Art of War: The New Translation (Harper Perennial Modern Classics)",
+      "D-Day [Sound Recording]: The Battle for Normandy",
+      "The Demon in the Freezer: A True Story"
+    ],
+    "bridge_profiles": [
+      "The Art of War: The New Translation is a valuable resource for students of The Art of War and will be appreciated by scholars. ",
+      "History enthusiasts and those interested in World War II would enjoy this book about the Normandy Landings on D-Day. It provides a detailed account of the battle, including the challenges faced by the commanders and the impact on civilians. The author's use of overlooked material and extensive research ensures a vivid and accurate retelling of the events.",
+      "The Demon in the Freezer: A True Story would be enjoyed by fans of thrilling and suspenseful stories, as well as those interested in the topics of biological weapons and diseases."
+    ],
+    "minimum_alpha": 0.1,
+    "final_rank": 9,
+    "final_score": 9.653790473937988,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's purchased books and reviews, the user is likely to enjoy historical fiction, political biographies, and books about influential figures in the technology industry.\nTARGET: State of Fear (Users who enjoy techno-thriller novels with a blend of scientific fact and fiction, and a focus on global warming and environmental issues would enjoy this book.)\nBRIDGES:\n- The Art of War: The New Translation (Harper Perennial Modern Classics): The Art of War: The New Translation is a valuable resource for students of The Art of War and will be appreciated by scholars. \n- D-Day [Sound Recording]: The Battle for Normandy: History enthusiasts and those interested in World War II would enjoy this book about the Normandy Landings on D-Day. It provides a detailed account of the battle, including the challenges faced by the commanders and the impact on civilians. The author's use of overlooked material and extensive research ensures a vivid and accurate retelling of the events.\n- The Demon in the Freezer: A True Story: The Demon in the Freezer: A True Story would be enjoyed by fans of thrilling and suspenseful stories, as well as those interested in the topics of biological weapons and diseases.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored The Art of War: The New Translation (Harper Perennial Modern Classics), D-Day [Sound Recording]: The Battle for Normandy, The Demon in the Freezer: A True Story, their preferences would shift toward 'State of Fear'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "The user's interest in historical fiction, political biographies, and books about influential figures would be satisfied by State of Fear. The book offers a gripping storyline with intriguing characters that align well with the user profile.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 18,
+    "user_profile": "Based on the purchased books and reviews, this user is likely to enjoy historical war novels, compelling love stories, dark humor, and insightful social commentary. They also appreciate complex mysteries, psychological thrillers, and police procedurals.",
+    "target_item_id": 2847,
+    "target_name": "On Writing",
+    "target_profile": "Aspiring writers and Stephen King fans would enjoy this book.",
+    "original_score": 9.629366874694824,
+    "recommendation_threshold": 9.782246589660645,
+    "gap_to_to_threshold": 0.1528797149658203,
+    "bridge_item_ids": [
+      5732,
+      224,
+      1170
+    ],
+    "bridge_names": [
+      "7 Habits Of Highly Effective People",
+      "All Quiet on the Western Front (with Related Readings)",
+      "The Quiet American"
+    ],
+    "bridge_profiles": [
+      "This book would be enjoyed by individuals seeking personal and professional growth and those looking to make positive changes in their lives.",
+      "Readers who enjoy historical fiction and war literature would appreciate All Quiet on the Western Front (with Related Readings).",
+      "Fans of thought-provoking and controversial stories, who appreciate keen observations of human weaknesses, will enjoy 'The Quiet American'."
+    ],
+    "minimum_alpha": 0.2,
+    "final_rank": 9,
+    "final_score": 9.98247241973877,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the purchased books and reviews, this user is likely to enjoy historical war novels, compelling love stories, dark humor, and insightful social commentary. They also appreciate complex mysteries, psychological thrillers, and police procedurals.\nTARGET: On Writing (Aspiring writers and Stephen King fans would enjoy this book.)\nBRIDGES:\n- 7 Habits Of Highly Effective People: This book would be enjoyed by individuals seeking personal and professional growth and those looking to make positive changes in their lives.\n- All Quiet on the Western Front (with Related Readings): Readers who enjoy historical fiction and war literature would appreciate All Quiet on the Western Front (with Related Readings).\n- The Quiet American: Fans of thought-provoking and controversial stories, who appreciate keen observations of human weaknesses, will enjoy 'The Quiet American'.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored 7 Habits Of Highly Effective People, All Quiet on the Western Front (with Related Readings), The Quiet American, their preferences would shift toward 'On Writing'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "7 Habits Of Highly Effective People and All Quiet on the Western Front (with Related Readings) would appeal to them, as they are interested in personal growth.",
+    "strategy": "near_miss"
+  },
+  {
+    "user_id": 19,
+    "user_profile": "Based on the user's purchased books and reviews, this user is likely to enjoy historical war novels with complex characters and emotional depth. They are also interested in biographies, particularly those related to sports and politics. The user appreciates books that explore themes of personal growth and decision-making in the face of challenges.",
+    "target_item_id": 4745,
+    "target_name": "Rich Dad Poor Dad (What the Rich Teach Their Kids About Money - That the Poor and Middle Class Do Not!)",
+    "target_profile": "Users who want to improve their personal finance knowledge and learn about a different perspective on wealth would enjoy this book.",
+    "original_score": 8.7315673828125,
+    "recommendation_threshold": 8.931456565856934,
+    "gap_to_to_threshold": 0.1998891830444336,
+    "bridge_item_ids": [
+      1894,
+      2942,
+      4755
+    ],
+    "bridge_names": [
+      "No Country for Old Men",
+      "The Demon in the Freezer: A True Story",
+      "The Survivors Club: The Secrets and Science that Could Save Your Life"
+    ],
+    "bridge_profiles": [
+      "Fans of unconventional and thought-provoking literature would enjoy 'No Country for Old Men'",
+      "The Demon in the Freezer: A True Story would be enjoyed by fans of thrilling and suspenseful stories, as well as those interested in the topics of biological weapons and diseases.",
+      "Readers who are interested in stories of survival and the science behind it would enjoy this book."
+    ],
+    "minimum_alpha": 0.3,
+    "final_rank": 10,
+    "final_score": 8.526142120361328,
+    "counterfactual_prompt": "<s>[INST] <<SYS>>\nYou are a logic engine. Your goal is to explain how the BRIDGE BOOKS prove that the TARGET BOOK fits the USER PROFILE.\n<</SYS>>\n\nUSER PROFILE: Based on the user's purchased books and reviews, this user is likely to enjoy historical war novels with complex characters and emotional depth. They are also interested in biographies, particularly those related to sports and politics. The user appreciates books that explore themes of personal growth and decision-making in the face of challenges.\nTARGET: Rich Dad Poor Dad (What the Rich Teach Their Kids About Money - That the Poor and Middle Class Do Not!) (Users who want to improve their personal finance knowledge and learn about a different perspective on wealth would enjoy this book.)\nBRIDGES:\n- No Country for Old Men: Fans of unconventional and thought-provoking literature would enjoy 'No Country for Old Men'\n- The Demon in the Freezer: A True Story: The Demon in the Freezer: A True Story would be enjoyed by fans of thrilling and suspenseful stories, as well as those interested in the topics of biological weapons and diseases.\n- The Survivors Club: The Secrets and Science that Could Save Your Life: Readers who are interested in stories of survival and the science behind it would enjoy this book.\nDATA: <USER_EMBED> <ITEM_EMBED>\n[/INST] If the user explored No Country for Old Men, The Demon in the Freezer: A True Story, The Survivors Club: The Secrets and Science that Could Save Your Life, their preferences would shift toward 'Rich Dad Poor Dad (What the Rich Teach Their Kids About Money - That the Poor and Middle Class Do Not!)'. Specifically, <EXPLAIN_POS>",
+    "llama_explanation": "the user's interest in historical war novels and biographies has shifted to non-fiction books like \"Rich Dad Poor Dad\" that offer valuable insights on personal finance.",
+    "strategy": "near_miss"
+  }
+]
