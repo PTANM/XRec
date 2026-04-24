@@ -9,9 +9,9 @@ from typing import Iterable, List
 
 import evaluate
 import numpy as np
+import requests
 import torch
 import torch.nn.functional as F
-from openai import OpenAI
 from transformers import AutoModelForCausalLM, AutoTokenizer, BartForConditionalGeneration
 
 
@@ -433,10 +433,12 @@ class GptJudgeScorer:
         if not api_key:
             raise ValueError("GPT judge API key is required when gpt_judge_model is set.")
 
-        client_kwargs = {"api_key": api_key}
-        if base_url:
-            client_kwargs["base_url"] = base_url
-        self.client = OpenAI(**client_kwargs)
+        normalized_base_url = (base_url or "https://api.openai.com/v1").rstrip("/")
+        if normalized_base_url.endswith("/chat/completions"):
+            normalized_base_url = normalized_base_url[: -len("/chat/completions")]
+
+        self.api_key = api_key
+        self.base_url = normalized_base_url
         self.model_name = model_name
         self.max_workers = max_workers
 
@@ -451,16 +453,27 @@ class GptJudgeScorer:
                 "reference": reference,
             }
         )
-        completion = self.client.chat.completions.create(
-            model=self.model_name,
-            temperature=0,
-            messages=[
-                {"role": "system", "content": self.system_prompt},
-                {"role": "user", "content": prompt},
-            ],
+        response = requests.post(
+            f"{self.base_url}/chat/completions",
+            headers={
+                "accept": "application/json",
+                "content-type": "application/json",
+                "Authorization": f"Bearer {self.api_key}",
+            },
+            json={
+                "model": self.model_name,
+                "temperature": 0,
+                "messages": [
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": prompt},
+                ],
+            },
+            timeout=120,
         )
-        response = completion.choices[0].message.content or ""
-        return extract_numeric_score(response)
+        response.raise_for_status()
+        payload = response.json()
+        content = payload["choices"][0]["message"]["content"] or ""
+        return extract_numeric_score(content)
 
     def score(self, predictions, references):
         with concurrent.futures.ThreadPoolExecutor(
