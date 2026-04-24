@@ -1,14 +1,17 @@
 import argparse
+import concurrent.futures
 import json
+import math
 import os
 import re
+from collections import Counter
 from typing import Iterable, List
 
 import evaluate
 import numpy as np
 import torch
 import torch.nn.functional as F
-from huggingface_hub import login
+from openai import OpenAI
 from transformers import AutoModelForCausalLM, AutoTokenizer, BartForConditionalGeneration
 
 
@@ -130,12 +133,67 @@ parser.add_argument(
     help="Load the LlamaScore model in 8-bit mode when CUDA is available.",
 )
 parser.add_argument(
+    "--skip_bart_score",
+    action="store_true",
+    help="Skip BARTScore evaluation.",
+)
+parser.add_argument(
+    "--skip_llama_score",
+    action="store_true",
+    help="Skip local LlamaScore evaluation.",
+)
+parser.add_argument(
     "--metadata_path",
     type=str,
     default="",
     help="Optional JSON or JSONL file containing raw item metadata keyed by iid.",
 )
+parser.add_argument(
+    "--gpt_judge_model",
+    type=str,
+    default="",
+    help="Optional OpenAI-compatible judge model name, e.g. gpt-5.2.",
+)
+parser.add_argument(
+    "--gpt_judge_base_url",
+    type=str,
+    default="",
+    help="Optional OpenAI-compatible base URL, useful for TAMU Chat or proxies.",
+)
+parser.add_argument(
+    "--gpt_judge_api_key_env",
+    type=str,
+    default="OPENAI_API_KEY",
+    help="Environment variable containing the GPT judge API key.",
+)
+parser.add_argument(
+    "--gpt_judge_max_workers",
+    type=int,
+    default=8,
+    help="Maximum parallel judge requests for GPT-based scoring.",
+)
+parser.add_argument(
+    "--gpt_judge_system_prompt_path",
+    type=str,
+    default="evaluation/system_prompt.txt",
+    help="System prompt used by the GPT-style judge.",
+)
 args = parser.parse_args()
+
+
+def huggingface_load_kwargs():
+    kwargs = {}
+    hf_token = os.environ.get("HUGGINGFACE_HUB_TOKEN") or os.environ.get("HF_TOKEN")
+    if hf_token:
+        kwargs["token"] = hf_token
+
+    if any(
+        os.environ.get(flag) == "1"
+        for flag in ("HF_LOCAL_FILES_ONLY", "HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE")
+    ):
+        kwargs["local_files_only"] = True
+
+    return kwargs
 
 
 def batch_items(items: List, batch_size: int) -> Iterable[List]:
@@ -143,9 +201,20 @@ def batch_items(items: List, batch_size: int) -> Iterable[List]:
         yield items[idx : idx + batch_size]
 
 
+def score_mean_std(values):
+    array = np.asarray(values, dtype=float)
+    return float(np.mean(array)), float(np.std(array))
+
+
 def normalize_text(text: str) -> List[str]:
     cleaned = re.sub(r"[^a-z0-9\s]", " ", text.lower())
     return [token for token in cleaned.split() if token]
+
+
+def ngrams(tokens, size):
+    if len(tokens) < size:
+        return []
+    return [tuple(tokens[idx : idx + size]) for idx in range(len(tokens) - size + 1)]
 
 
 def extract_attribute_ngrams(text: str, max_ngram: int = 4):
@@ -234,13 +303,182 @@ def bert_score(predictions, references):
     )
 
 
+def rouge_n_scores(predictions, references, ngram_size):
+    scores = []
+    for prediction, reference in zip(predictions, references):
+        prediction_counts = Counter(ngrams(normalize_text(prediction), ngram_size))
+        reference_counts = Counter(ngrams(normalize_text(reference), ngram_size))
+
+        if not prediction_counts or not reference_counts:
+            scores.append(0.0)
+            continue
+
+        overlap = sum((prediction_counts & reference_counts).values())
+        precision = overlap / sum(prediction_counts.values())
+        recall = overlap / sum(reference_counts.values())
+        if precision + recall == 0:
+            scores.append(0.0)
+        else:
+            scores.append((2 * precision * recall) / (precision + recall))
+    return score_mean_std(scores)
+
+
+def lcs_length(tokens_a, tokens_b):
+    if not tokens_a or not tokens_b:
+        return 0
+
+    previous = [0] * (len(tokens_b) + 1)
+    for token_a in tokens_a:
+        current = [0]
+        for idx, token_b in enumerate(tokens_b, start=1):
+            if token_a == token_b:
+                current.append(previous[idx - 1] + 1)
+            else:
+                current.append(max(previous[idx], current[-1]))
+        previous = current
+    return previous[-1]
+
+
+def rouge_l_scores(predictions, references):
+    scores = []
+    for prediction, reference in zip(predictions, references):
+        prediction_tokens = normalize_text(prediction)
+        reference_tokens = normalize_text(reference)
+        if not prediction_tokens or not reference_tokens:
+            scores.append(0.0)
+            continue
+
+        overlap = lcs_length(prediction_tokens, reference_tokens)
+        precision = overlap / len(prediction_tokens)
+        recall = overlap / len(reference_tokens)
+        if precision + recall == 0:
+            scores.append(0.0)
+        else:
+            scores.append((2 * precision * recall) / (precision + recall))
+    return score_mean_std(scores)
+
+
+def corpus_bleu_scores(predictions, references, max_order=4):
+    prediction_lengths = 0
+    reference_lengths = 0
+    precisions = []
+
+    for ngram_size in range(1, max_order + 1):
+        clipped_matches = 0
+        total_candidates = 0
+        for prediction, reference in zip(predictions, references):
+            prediction_tokens = normalize_text(prediction)
+            reference_tokens = normalize_text(reference)
+            if ngram_size == 1:
+                prediction_lengths += len(prediction_tokens)
+                reference_lengths += len(reference_tokens)
+
+            prediction_counts = Counter(ngrams(prediction_tokens, ngram_size))
+            reference_counts = Counter(ngrams(reference_tokens, ngram_size))
+            clipped_matches += sum(
+                min(count, reference_counts[ngram])
+                for ngram, count in prediction_counts.items()
+            )
+            total_candidates += sum(prediction_counts.values())
+
+        if total_candidates == 0:
+            precisions.append(0.0)
+        elif clipped_matches == 0:
+            precisions.append(1.0 / (total_candidates + 1.0))
+        else:
+            precisions.append(clipped_matches / total_candidates)
+
+    if prediction_lengths == 0:
+        brevity_penalty = 0.0
+    elif prediction_lengths > reference_lengths:
+        brevity_penalty = 1.0
+    else:
+        brevity_penalty = math.exp(1.0 - (reference_lengths / prediction_lengths))
+
+    bleu_scores = []
+    for order in range(1, max_order + 1):
+        order_precisions = precisions[:order]
+        if any(value <= 0 for value in order_precisions):
+            bleu_scores.append(0.0)
+            continue
+        bleu_scores.append(
+            brevity_penalty
+            * math.exp(sum(math.log(value) for value in order_precisions) / order)
+        )
+
+    return {
+        "bleu": float(bleu_scores[-1]),
+        "bleu1": float(bleu_scores[0]),
+        "bleu2": float(bleu_scores[1]),
+        "bleu3": float(bleu_scores[2]),
+        "bleu4": float(bleu_scores[3]),
+    }
+
+
+def average_prediction_length(predictions):
+    lengths = [len(normalize_text(prediction)) for prediction in predictions]
+    return float(np.mean(np.asarray(lengths))) if lengths else 0.0
+
+
+def extract_numeric_score(text):
+    match = re.search(r"-?\d+(?:\.\d+)?", text)
+    if match is None:
+        raise ValueError(f"Could not parse numeric score from judge response: {text!r}")
+    value = float(match.group(0))
+    return max(0.0, min(100.0, value))
+
+
+class GptJudgeScorer:
+    def __init__(self, model_name, api_key, base_url="", max_workers=8):
+        if not api_key:
+            raise ValueError("GPT judge API key is required when gpt_judge_model is set.")
+
+        client_kwargs = {"api_key": api_key}
+        if base_url:
+            client_kwargs["base_url"] = base_url
+        self.client = OpenAI(**client_kwargs)
+        self.model_name = model_name
+        self.max_workers = max_workers
+
+        with open(args.gpt_judge_system_prompt_path, "r") as file:
+            self.system_prompt = file.read().strip()
+
+    def _score_pair(self, pair):
+        prediction, reference = pair
+        prompt = json.dumps(
+            {
+                "prediction": prediction,
+                "reference": reference,
+            }
+        )
+        completion = self.client.chat.completions.create(
+            model=self.model_name,
+            temperature=0,
+            messages=[
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": prompt},
+            ],
+        )
+        response = completion.choices[0].message.content or ""
+        return extract_numeric_score(response)
+
+    def score(self, predictions, references):
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=max(self.max_workers, 1)
+        ) as executor:
+            values = list(executor.map(self._score_pair, zip(predictions, references)))
+        return score_mean_std(values)
+
+
 class BartScorer:
     def __init__(self, model_name):
+        hf_kwargs = huggingface_load_kwargs()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name, **hf_kwargs)
         self.model = BartForConditionalGeneration.from_pretrained(
             model_name,
             torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+            **hf_kwargs,
         ).to(self.device)
         self.model.eval()
 
@@ -291,10 +529,7 @@ class BartScorer:
 
 class LlamaScorer:
     def __init__(self, model_name, load_in_8bit=False):
-        hf_token = os.environ.get("HUGGINGFACE_HUB_TOKEN") or os.environ.get("HF_TOKEN")
-        if hf_token:
-            login(token=hf_token, add_to_git_credential=False)
-
+        hf_kwargs = huggingface_load_kwargs()
         model_kwargs = {
             "low_cpu_mem_usage": True,
             "torch_dtype": torch.float16 if torch.cuda.is_available() else torch.float32,
@@ -304,8 +539,10 @@ class LlamaScorer:
         if load_in_8bit and torch.cuda.is_available():
             model_kwargs["load_in_8bit"] = True
 
-        self.model = AutoModelForCausalLM.from_pretrained(model_name, **model_kwargs)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = AutoModelForCausalLM.from_pretrained(
+            model_name, **model_kwargs, **hf_kwargs
+        )
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name, **hf_kwargs)
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
         self.device = self.model.get_input_embeddings().weight.device
@@ -424,44 +661,89 @@ class MetricScore:
             bert_recall_std,
             bert_f1_std,
         ) = bert_score(self.predictions, self.references)
+        rouge1, rouge1_std = rouge_n_scores(self.predictions, self.references, 1)
+        rouge2, rouge2_std = rouge_n_scores(self.predictions, self.references, 2)
+        rougeL, rougeL_std = rouge_l_scores(self.predictions, self.references)
+        bleu_scores = corpus_bleu_scores(self.predictions, self.references)
+        avg_length = average_prediction_length(self.predictions)
 
-        bart_score_mean, bart_score_std = BartScorer(args.bart_model_name).score(
-            self.predictions,
-            self.references,
-            batch_size=args.batch_size,
-            max_length=args.max_length,
-        )
-        llama_score_mean, llama_score_std = LlamaScorer(
-            args.llama_model_name,
-            load_in_8bit=args.llama_load_in_8bit,
-        ).score(
-            self.predictions,
-            self.references,
-            batch_size=args.batch_size,
-            max_length=args.max_length,
-        )
+        if args.skip_bart_score:
+            bart_score_mean = None
+            bart_score_std = None
+        else:
+            bart_score_mean, bart_score_std = BartScorer(args.bart_model_name).score(
+                self.predictions,
+                self.references,
+                batch_size=args.batch_size,
+                max_length=args.max_length,
+            )
+
+        if args.skip_llama_score:
+            llama_score_mean = None
+            llama_score_std = None
+        else:
+            llama_score_mean, llama_score_std = LlamaScorer(
+                args.llama_model_name,
+                load_in_8bit=args.llama_load_in_8bit,
+            ).score(
+                self.predictions,
+                self.references,
+                batch_size=args.batch_size,
+                max_length=args.max_length,
+            )
+
+        if args.gpt_judge_model:
+            api_key = os.environ.get(args.gpt_judge_api_key_env, "")
+            base_url = args.gpt_judge_base_url or os.environ.get("OPENAI_BASE_URL", "")
+            gpt_score_mean, gpt_score_std = GptJudgeScorer(
+                model_name=args.gpt_judge_model,
+                api_key=api_key,
+                base_url=base_url,
+                max_workers=args.gpt_judge_max_workers,
+            ).score(self.predictions, self.references)
+        else:
+            gpt_score_mean = None
+            gpt_score_std = None
+
         factual_precision_mean, factual_precision_std, matched_total, predicted_total = (
             self.factual_precision()
         )
         tokens_predict = [sentence.split() for sentence in self.predictions]
         usr, _ = unique_sentence_percent(tokens_predict)
 
-        scores["llama_score"] = llama_score_mean
-        scores["bart_score"] = bart_score_mean
         scores["bert_precision"] = bert_precision
         scores["bert_recall"] = bert_recall
         scores["bert_f1"] = bert_f1
+        scores["rouge1"] = rouge1
+        scores["rouge2"] = rouge2
+        scores["rougeL"] = rougeL
+        scores["bleu"] = bleu_scores["bleu"]
+        scores["bleu1"] = bleu_scores["bleu1"]
+        scores["bleu2"] = bleu_scores["bleu2"]
+        scores["bleu3"] = bleu_scores["bleu3"]
+        scores["bleu4"] = bleu_scores["bleu4"]
+        scores["avg_length"] = avg_length
         scores["factual_precision"] = factual_precision_mean
         scores["matched_attributes"] = matched_total
         scores["predicted_attributes"] = predicted_total
         scores["usr"] = usr
 
-        scores["llama_score_std"] = llama_score_std
-        scores["bart_score_std"] = bart_score_std
         scores["bert_precision_std"] = bert_precision_std
         scores["bert_recall_std"] = bert_recall_std
         scores["bert_f1_std"] = bert_f1_std
+        scores["rouge1_std"] = rouge1_std
+        scores["rouge2_std"] = rouge2_std
+        scores["rougeL_std"] = rougeL_std
         scores["factual_precision_std"] = factual_precision_std
+        if bart_score_mean is not None:
+            scores["bart_score"] = bart_score_mean
+            scores["bart_score_std"] = bart_score_std
+        if llama_score_mean is not None:
+            scores["llama_score"] = llama_score_mean
+            scores["llama_score_std"] = llama_score_std
+        if gpt_score_mean is not None:
+            scores["gpt_score"] = gpt_score_mean
+            scores["gpt_score_std"] = gpt_score_std
         return scores
 
     def print_score(self):
@@ -469,22 +751,42 @@ class MetricScore:
         print(f"dataset: {args.dataset}")
         print(f"results_tag: {args.results_tag}")
         print("Explainability Evaluation Metrics:")
-        print(f"llama_score: {scores['llama_score']:.4f}")
-        print(f"bart_score: {scores['bart_score']:.4f}")
+        if "llama_score" in scores:
+            print(f"llama_score: {scores['llama_score']:.4f}")
+        if "gpt_score" in scores:
+            print(f"gpt_score: {scores['gpt_score']:.4f}")
+        if "bart_score" in scores:
+            print(f"bart_score: {scores['bart_score']:.4f}")
         print(f"bert_precision: {scores['bert_precision']:.4f}")
         print(f"bert_recall: {scores['bert_recall']:.4f}")
         print(f"bert_f1: {scores['bert_f1']:.4f}")
+        print(f"rouge1: {scores['rouge1']:.4f}")
+        print(f"rouge2: {scores['rouge2']:.4f}")
+        print(f"rougeL: {scores['rougeL']:.4f}")
+        print(f"bleu: {scores['bleu']:.4f}")
+        print(f"bleu1: {scores['bleu1']:.4f}")
+        print(f"bleu2: {scores['bleu2']:.4f}")
+        print(f"bleu3: {scores['bleu3']:.4f}")
+        print(f"bleu4: {scores['bleu4']:.4f}")
         print(f"factual_precision: {scores['factual_precision']:.4f}")
         print(
             "attribute_matches: "
             f"{scores['matched_attributes']}/{scores['predicted_attributes']}"
         )
         print(f"usr: {scores['usr']:.4f}")
+        print(f"avg_length: {scores['avg_length']:.2f}")
         print("-" * 30)
         print("Standard Deviation:")
-        print(f"llama_score_std: {scores['llama_score_std']:.4f}")
-        print(f"bart_score_std: {scores['bart_score_std']:.4f}")
+        if "llama_score_std" in scores:
+            print(f"llama_score_std: {scores['llama_score_std']:.4f}")
+        if "gpt_score_std" in scores:
+            print(f"gpt_score_std: {scores['gpt_score_std']:.4f}")
+        if "bart_score_std" in scores:
+            print(f"bart_score_std: {scores['bart_score_std']:.4f}")
         print(f"bert_precision_std: {scores['bert_precision_std']:.4f}")
         print(f"bert_recall_std: {scores['bert_recall_std']:.4f}")
         print(f"bert_f1_std: {scores['bert_f1_std']:.4f}")
+        print(f"rouge1_std: {scores['rouge1_std']:.4f}")
+        print(f"rouge2_std: {scores['rouge2_std']:.4f}")
+        print(f"rougeL_std: {scores['rougeL_std']:.4f}")
         print(f"factual_precision_std: {scores['factual_precision_std']:.4f}")

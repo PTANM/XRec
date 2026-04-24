@@ -77,10 +77,10 @@ class XRec:
             )
         map_location = self.model.adapter_device
         self.model.user_embedding_converter.load_state_dict(
-            torch.load(user_path, map_location=map_location)
+            torch.load(user_path, map_location=map_location, weights_only=True)
         )
         self.model.item_embedding_converter.load_state_dict(
-            torch.load(item_path, map_location=map_location)
+            torch.load(item_path, map_location=map_location, weights_only=True)
         )
         print(f"Loaded model from {user_path}")
         print(f"Loaded model from {item_path}")

@@ -3,11 +3,25 @@ import os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from huggingface_hub import login
 from transformers import LlamaTokenizer
 
 from models.modeling_explainer import LlamaForCausalLM
 from utils.parse import args
+
+
+def huggingface_load_kwargs():
+    kwargs = {}
+    hf_token = os.environ.get("HUGGINGFACE_HUB_TOKEN") or os.environ.get("HF_TOKEN")
+    if hf_token:
+        kwargs["token"] = hf_token
+
+    if any(
+        os.environ.get(flag) == "1"
+        for flag in ("HF_LOCAL_FILES_ONLY", "HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE")
+    ):
+        kwargs["local_files_only"] = True
+
+    return kwargs
 
 
 class PWLayer(nn.Module):
@@ -88,10 +102,7 @@ class Explainer(nn.Module):
     def __init__(self, token_size=4096, user_embed_size=64, item_embed_size=64):
         super().__init__()
 
-        hf_token = os.environ.get("HUGGINGFACE_HUB_TOKEN") or os.environ.get("HF_TOKEN")
-        if hf_token:
-            login(token=hf_token, add_to_git_credential=False)
-
+        hf_kwargs = huggingface_load_kwargs()
         model_kwargs = {
             "low_cpu_mem_usage": True,
             "torch_dtype": torch.float16 if torch.cuda.is_available() else torch.float32,
@@ -101,8 +112,10 @@ class Explainer(nn.Module):
         if args.load_in_8bit and torch.cuda.is_available():
             model_kwargs["load_in_8bit"] = True
 
-        self.model = LlamaForCausalLM.from_pretrained(args.model_name, **model_kwargs)
-        self.tokenizer = LlamaTokenizer.from_pretrained(args.model_name)
+        self.model = LlamaForCausalLM.from_pretrained(
+            args.model_name, **model_kwargs, **hf_kwargs
+        )
+        self.tokenizer = LlamaTokenizer.from_pretrained(args.model_name, **hf_kwargs)
 
         special_tokens_dict = {
             "additional_special_tokens": ["<USER_EMBED>", "<ITEM_EMBED>", "<EXPLAIN_POS>"]
@@ -159,17 +172,20 @@ class Explainer(nn.Module):
         )
 
     def _prepare_inputs(self, user_embedding, item_embedding, input_text):
+        user_adapter_param = next(self.user_embedding_converter.parameters())
+        item_adapter_param = next(self.item_embedding_converter.parameters())
+
         user_embedding = user_embedding.to(
-            device=self.adapter_device, dtype=self.adapter_dtype
+            device=user_adapter_param.device, dtype=user_adapter_param.dtype
         )
         item_embedding = item_embedding.to(
-            device=self.adapter_device, dtype=self.adapter_dtype
+            device=item_adapter_param.device, dtype=item_adapter_param.dtype
         )
         converted_user_embedding = self.user_embedding_converter(user_embedding).to(
-            dtype=self.adapter_dtype
+            device=self.adapter_device, dtype=self.adapter_dtype
         )
         converted_item_embedding = self.item_embedding_converter(item_embedding).to(
-            dtype=self.adapter_dtype
+            device=self.adapter_device, dtype=self.adapter_dtype
         )
 
         tokenized_inputs = self.tokenizer(
@@ -252,13 +268,30 @@ class Explainer(nn.Module):
             _,
         ) = self._prepare_inputs(user_embedding, item_embedding, input_text)
 
-        outputs = self.model.generate(
-            inputs_embeds=inputs_embeds,
-            attention_mask=attention_mask,
-            max_new_tokens=args.max_new_tokens,
-            user_embed=converted_user_embedding,
-            item_embed=converted_item_embedding,
-            user_embed_pos=user_embed_position,
-            item_embed_pos=item_embed_position,
-        )
+        generation_kwargs = {
+            "inputs_embeds": inputs_embeds,
+            "attention_mask": attention_mask,
+            "max_new_tokens": args.max_new_tokens,
+            "user_embed": converted_user_embedding,
+            "item_embed": converted_item_embedding,
+            "user_embed_pos": user_embed_position,
+            "item_embed_pos": item_embed_position,
+            "pad_token_id": self.tokenizer.pad_token_id,
+            "eos_token_id": self.tokenizer.eos_token_id,
+            # Llama chat generation defaults can sample from invalid fp16 logits.
+            "remove_invalid_values": True,
+            "renormalize_logits": True,
+        }
+
+        try:
+            outputs = self.model.generate(**generation_kwargs)
+        except RuntimeError as exc:
+            if "probability tensor contains either `inf`, `nan` or element < 0" not in str(exc):
+                raise
+
+            print(
+                "Generation hit invalid sampling probabilities; retrying with greedy decoding."
+            )
+            generation_kwargs["do_sample"] = False
+            outputs = self.model.generate(**generation_kwargs)
         return self.tokenizer.batch_decode(outputs, skip_special_tokens=True)
