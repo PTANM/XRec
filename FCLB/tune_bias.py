@@ -38,7 +38,7 @@ BIAS_COMBOS = [
     (0.20,  0.3,  8),    # moderate positive + moderate suppression
 ]
 
-MAX_SAMPLES = 100
+MAX_SAMPLES = 50
 
 
 # -- Evaluation functions (inline to avoid import issues) ----------------------
@@ -303,7 +303,7 @@ for combo in BIAS_COMBOS:
 
 # -- Save results --------------------------------------------------------------
 os.makedirs("FCLB", exist_ok=True)
-results_path = "FCLB/tune_results.pkl"
+results_path = "FCLB/tune_results_50.pkl"
 
 with open(results_path, "wb") as f:
     pickle.dump(all_results, f)
