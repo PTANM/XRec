@@ -15,26 +15,26 @@ from logit_bias import ItemConstrainedLogitsProcessor
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}", flush=True)
 
-# ?? KEEP YOUR TUNED VALUES
-POSITIVE_BIAS = 0.10
-NEGATIVE_BIAS = 0.10
-MIN_POSITION = 8
+# ── Bias hyper-parameters ──────────────────────────────────────────────
+# Slightly stronger initial bias than v1 since entropy gating will
+# suppress it whenever the model is confident, so the effective average
+# bias is much lower.
+POSITIVE_BIAS  = 0.15
+NEGATIVE_BIAS  = 0.10   # previously 0.10 on verified, 0.0 on blacklist; now both active
+
+# Entropy gate: ignore the bias below this fraction of max entropy.
+# 0.3 means the model must be at ≥ 30 % of maximum uncertainty before
+# any bias is applied.  Tune up (e.g. 0.5) to be more conservative.
+ENTROPY_THRESHOLD = 0.3
+
+# Decay: bias at full strength for the first DECAY_HORIZON steps past
+# MIN_POSITION, then plateaus at DECAY_FLOOR.
+MIN_POSITION   = 8
+DECAY_HORIZON  = 60
+DECAY_FLOOR    = 0.2
 
 CHECKPOINT_INTERVAL = 500
 LOG_INTERVAL = 50
-
-
-class SafeItemProcessor(ItemConstrainedLogitsProcessor):
-    """
-    Wrapper that prevents NaN / inf logits from crashing CUDA
-    """
-    def __call__(self, input_ids, scores):
-        scores = super().__call__(input_ids, scores)
-
-        # ?? CRITICAL FIX: sanitize logits
-        scores = torch.nan_to_num(scores, nan=0.0, posinf=1e4, neginf=-1e4)
-
-        return scores
 
 
 class XRecBiased:
@@ -47,17 +47,17 @@ class XRecBiased:
         base = f"/scratch/user/kiarab/XRec/FCLB/data/{args.dataset}"
         self.user_converter_path = f"{base}/user_converter.pkl"
         self.item_converter_path = f"{base}/item_converter.pkl"
-        self.pred_path = f"{base}/tst_predictions_biased_speed.pkl"
-        self.ref_path = f"{base}/tst_references_biased_speed.pkl"
+        self.pred_path = f"{base}/tst_predictions_biased.pkl"
+        self.ref_path  = f"{base}/tst_references_biased.pkl"
 
         with open(f"{base}/item_vocab.pkl", "rb") as f:
             vocab_data = pickle.load(f)
 
-        self.item_vocab = vocab_data["item_vocab"]
+        self.item_vocab   = vocab_data["item_vocab"]
         self.blacklist_ids = vocab_data["blacklist_ids"]
-        self.user_vocab = vocab_data.get("user_vocab", {})
-        self.item_words = vocab_data.get("item_words", {})
-        self.user_words = vocab_data.get("user_words", {})
+        self.user_vocab   = vocab_data.get("user_vocab", {})
+        self.item_words   = vocab_data.get("item_words", {})
+        self.user_words   = vocab_data.get("user_words", {})
 
         self._processor_cache = {}
 
@@ -67,13 +67,7 @@ class XRecBiased:
         if key in self._processor_cache:
             return self._processor_cache[key]
 
-        item_ids = self.item_vocab.get(iid, set())
-
-        # ?? FIX 1: disable processor if vocab is too small
-        if not item_ids or len(item_ids) < 5:
-            self._processor_cache[key] = None
-            return None
-
+        item_ids   = self.item_vocab.get(iid, set())
         pref_weight = 1.0
 
         if self.user_vocab:
@@ -90,21 +84,22 @@ class XRecBiased:
 
         if u_words and i_words:
             union = len(u_words | i_words)
-            word_overlap = (len(u_words & i_words) / union) if union else 1.0
+            word_overlap = max(len(u_words & i_words) / union, 0.3) if union else 1.0
         else:
             word_overlap = 1.0
 
-        # ?? FIX 2: clamp weight (prevents instability)
         final_weight = (pref_weight + word_overlap) / 2.0
-        final_weight = max(0.3, min(final_weight, 1.0))
 
-        processor = SafeItemProcessor(
+        processor = ItemConstrainedLogitsProcessor(
             verified_token_ids=item_ids,
             blacklist_token_ids=self.blacklist_ids,
             positive_bias=POSITIVE_BIAS,
             negative_bias=NEGATIVE_BIAS,
             preference_weight=final_weight,
             min_position=MIN_POSITION,
+            decay_horizon=DECAY_HORIZON,
+            decay_floor=DECAY_FLOOR,
+            entropy_threshold=ENTROPY_THRESHOLD,
             device=str(device),
         )
 
@@ -125,9 +120,7 @@ class XRecBiased:
         start = time.time()
         total = len(self.tst_loader)
 
-        model_generate = self.model.generate
-
-        print("Generating biased explanations...", flush=True)
+        model_generate = self.model.generate  # cache attribute lookup
 
         with torch.inference_mode():
 
@@ -141,38 +134,28 @@ class XRecBiased:
                 iid = str(self.data_handler.tst_dict["iid"][i])
                 uid = str(self.data_handler.tst_dict["uid"][i])
 
-                processor = self._get_processor(uid, iid)
+                logits_processor = [self._get_processor(uid, iid)]
 
-                if processor is not None:
-                    logits_processor = [processor]
-                else:
-                    logits_processor = None
+                outputs = model_generate(
+                    user_embed,
+                    item_embed,
+                    input_text,
+                    logits_processor=logits_processor,
+                    use_cache=True,
+                    num_beams=1,
+                )
 
-                try:
-                    outputs = model_generate(
-                        user_embed,
-                        item_embed,
-                        input_text,
-                        logits_processor=logits_processor,
-                    )
-
-                    text = outputs[0]
-                    cut = text.find("[")
-                    if cut != -1:
-                        text = text[:cut]
-
-                except Exception as e:
-                    # ?? FIX 3: skip bad samples instead of crashing
-                    print(f"?? Skipping sample {i} due to error: {e}", flush=True)
-                    text = ""
+                text = outputs[0]
+                cut = text.find("[")
+                if cut != -1:
+                    text = text[:cut]
 
                 predictions.append(text)
                 references.append(explain[0])
 
                 if i % LOG_INTERVAL == 0 and i > 0:
                     elapsed = time.time() - start
-                    eta = (elapsed / i) * (total - i) / 3600
-                    print(f"[{i}/{total}] ETA: {eta:.2f}h", flush=True)
+                    print(f"[{i}/{total}] ETA: {(elapsed/i)*(total-i)/3600:.2f}h")
 
                 if i % CHECKPOINT_INTERVAL == 0 and i > 0:
                     with open(self.pred_path + ".ckpt", "wb") as f:
@@ -186,13 +169,4 @@ class XRecBiased:
         with open(self.ref_path, "wb") as f:
             pickle.dump(references, f)
 
-        print(f"Done in {(time.time()-start)/3600:.2f}h", flush=True)
-
-
-def main():
-    runner = XRecBiased()
-    runner.evaluate()
-
-
-if __name__ == "__main__":
-    main()
+        print(f"Done in {(time.time()-start)/3600:.2f}h")
