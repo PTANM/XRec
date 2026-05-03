@@ -1,0 +1,33 @@
+dataset: amazon
+results_path: data/amazon/tst_results_mlp.jsonl
+dataset: amazon
+results_tag: mlp
+Explainability Evaluation Metrics:
+llama_score: -2.3178
+bart_score: -3.1434
+bert_precision: 0.2899
+bert_recall: 0.3247
+bert_f1: 0.3079
+rouge1: 0.3481
+rouge2: 0.1364
+rougeL: 0.2713
+bleu: 0.1088
+bleu1: 0.3167
+bleu2: 0.1963
+bleu3: 0.1412
+bleu4: 0.1088
+factual_precision: 0.1134
+attribute_matches: 6202/54674
+usr: 1.0000
+avg_length: 56.52
+------------------------------
+Standard Deviation:
+llama_score_std: 0.3958
+bart_score_std: 0.4010
+bert_precision_std: 0.2556
+bert_recall_std: 0.2498
+bert_f1_std: 0.2478
+rouge1_std: 0.0706
+rouge2_std: 0.0547
+rougeL_std: 0.0597
+factual_precision_std: 0.1218

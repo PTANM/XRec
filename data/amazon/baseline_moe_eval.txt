@@ -1,0 +1,33 @@
+dataset: amazon
+results_path: data/amazon/tst_results_baseline_moe.jsonl
+dataset: amazon
+results_tag: baseline_moe
+Explainability Evaluation Metrics:
+llama_score: -2.2567
+bart_score: -3.0936
+bert_precision: 0.3602
+bert_recall: 0.3335
+bert_f1: 0.3474
+rouge1: 0.3927
+rouge2: 0.1778
+rougeL: 0.3163
+bleu: 0.1594
+bleu1: 0.3847
+bleu2: 0.2575
+bleu3: 0.1966
+bleu4: 0.1594
+factual_precision: 0.0465
+attribute_matches: 1759/37833
+usr: 0.9980
+avg_length: 47.45
+------------------------------
+Standard Deviation:
+llama_score_std: 0.3957
+bart_score_std: 0.4071
+bert_precision_std: 0.3506
+bert_recall_std: 0.3434
+bert_f1_std: 0.3429
+rouge1_std: 0.0801
+rouge2_std: 0.0615
+rougeL_std: 0.0646
+factual_precision_std: 0.0810
