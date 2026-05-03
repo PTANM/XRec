@@ -1,7 +1,6 @@
 # MoE vs. 2-Layer MLP Adapter Ablation for XRec
 
-This README documents our ablation study for XRec, which asks the question:
-
+This documents our ablation study for XRec, which asks the question:
 **Can a lightweight 2-layer MLP replace the original XRec Mixture-of-Experts (MoE) adapter without degrading explanation quality?**
 
 The pipeline has five stages:
