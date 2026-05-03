@@ -1,3 +1,22 @@
+# Mitigating Hallucinations and Optimizing Adapter Architectures in LLM-Based Explainable Recommendation
+
+Branches:
+
+- Main: Contains forked repo from XRec: Large Language Models for Explainable Recommendation
+
+- mlp-test: Contains files for Question 1 - Can a simple, lightweight 2-layer Multilayer Perceptron (MLP) replace the complex Mixture of Experts (MoE) adapter without degrading semantic alignment?
+
+- fclb: Contains files for Question 2 - Can a training-free decoding intervention (Feature-Constrained Logit Biasing) mitigate "preference-inconsistent" hallucinations during the inference generation phase?
+
+- counterfactual: Contains files for Question 3 - Explore the counterfactual side of recommendations: why are certain items not recommended to a user, and what minimal, realistic, and actionable changes in their behavior or interactions could lead to these items being recommended?
+
+
+
+
+
+
+----------------------------------------------
+----------------------------------------------
 # XRec: Large Language Models for Explainable Recommendation
 
 <img src='XRec_cover.png' />
