@@ -9,13 +9,12 @@ import os
 import nltk
 from rouge_score import rouge_scorer
 from nltk.translate.bleu_score import corpus_bleu, SmoothingFunction
+from bert_score import score
 
 nltk.download('punkt', quiet=True)
 
 
-# ----------------------------
-# TEXT HELPERS
-# ----------------------------
+# Helpers
 def tokenize(text):
     return nltk.word_tokenize(text.lower())
 
@@ -28,11 +27,8 @@ def unique_sentence_percent(sequence_batch):
     return len(unique_seq) / len(sequence_batch), len(unique_seq)
 
 
-# ----------------------------
 # BERT SCORE
-# ----------------------------
 def BERT_score(predictions, references):
-    from bert_score import score
 
     # safety cleanup
     references = [r if r.strip() != "" else "empty" for r in references]
@@ -50,9 +46,7 @@ def BERT_score(predictions, references):
     )
 
 
-# ----------------------------
 # ROUGE
-# ----------------------------
 def ROUGE_score(predictions, references):
     scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
 
@@ -70,9 +64,7 @@ def ROUGE_score(predictions, references):
     }
 
 
-# ----------------------------
 # BLEU
-# ----------------------------
 def BLEU_score(predictions, references):
     refs = [[r.split()] for r in references]
     preds = [p.split() for p in predictions]
@@ -87,9 +79,7 @@ def BLEU_score(predictions, references):
     return bleu4, [bleu1, bleu2, bleu3, bleu4]
 
 
-# ----------------------------
 # FACTUAL PRECISION
-# ----------------------------
 def factual_precision(predictions, item_words_list):
     scores = []
 
@@ -107,9 +97,7 @@ def factual_precision(predictions, item_words_list):
     return float(np.mean(scores)), float(np.std(scores)), scores
 
 
-# ----------------------------
 # PREF CONSISTENCY
-# ----------------------------
 def preference_consistency(predictions, item_words_list, user_words_list):
     scores = []
 
@@ -130,9 +118,6 @@ def preference_consistency(predictions, item_words_list, user_words_list):
     return float(np.mean(scores)), float(np.std(scores)), scores
 
 
-# ----------------------------
-# MAIN
-# ----------------------------
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=str, default="amazon")
@@ -140,16 +125,14 @@ if __name__ == "__main__":
     parser.add_argument("--ref", type=str, default=None)
     args = parser.parse_args()
 
-    base = f"/scratch/user/kiarab/XRec/FCLB/data/{args.dataset}"
+    base = f"ADD BASE DIR + /XRec/FCLB/data/{args.dataset}"
 
     pred_path = args.pred or f"{base}/tst_predictions_biased_speed.pkl"
     ref_path  = args.ref  or f"{base}/tst_references_biased_speed.pkl"
     vocab_path = f"{base}/item_vocab.pkl"
     test_path  = f"{base}/tst.pkl"
 
-    # ----------------------------
-    # LOAD PRED/REF
-    # ----------------------------
+    # load prediction and references files
     with open(pred_path, "rb") as f:
         predictions = pickle.load(f)
 
@@ -158,18 +141,14 @@ if __name__ == "__main__":
 
     print(f"Loaded {len(predictions)} predictions")
 
-    # ----------------------------
-    # LOAD VOCAB
-    # ----------------------------
+    # load vocab files
     with open(vocab_path, "rb") as f:
         vocab = pickle.load(f)
 
     item_words_dict = vocab.get("item_words", {})
     user_words_dict = vocab.get("user_words", {})
 
-    # ----------------------------
-    # LOAD TEST DATA (SAFE)
-    # ----------------------------
+    # load test data
     item_words_list = []
     user_words_list = []
 
@@ -177,7 +156,6 @@ if __name__ == "__main__":
         with open(test_path, "rb") as f:
             test_data = pickle.load(f)
 
-        # pandas DataFrame case (XRec standard)
         if hasattr(test_data, "to_dict"):
             test_dict = test_data.to_dict("list")
         else:
@@ -193,9 +171,7 @@ if __name__ == "__main__":
     else:
         raise FileNotFoundError(f"{test_path} not found (needed for alignment)")
 
-    # ----------------------------
-    # METRICS
-    # ----------------------------
+    # metrics 
     print("\nRunning BERTScore...")
     bp, br, bf, bp_std, br_std, bf_std = BERT_score(predictions, references)
 
@@ -216,12 +192,8 @@ if __name__ == "__main__":
 
     avg_len = np.mean([len(p.split()) for p in predictions])
 
-    # ----------------------------
-    # OUTPUT
-    # ----------------------------
-    print("\n==============================")
+    # outut
     print("FINAL RESULTS")
-    print("==============================")
 
     print(f"BERT F1: {bf:.4f} ± {bf_std:.4f}")
 
@@ -240,9 +212,7 @@ if __name__ == "__main__":
     print("\nPreference Consistency:")
     print(f"{pc:.4f} ± {pc_std:.4f}")
 
-    # ----------------------------
-    # SAVE RESULTS
-    # ----------------------------
+    # save results
     out_path = f"{base}/eval_results.json"
 
     results = {
