@@ -1,3 +1,7 @@
+### Feature Constrained Generation via Logit Biasing
+Repo is based on XRec's initial repo. Documents for the added logit biasing feature are in the FCLB folder.
+
+
 ### Requirements:
 Same as original XRec
 - Requires **Hugging Face User Access Token** for downloading Llama 2 model
