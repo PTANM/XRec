@@ -242,7 +242,7 @@ Open in Jupyter and run all cells. The notebook reads:
 | **USR** (Unique Sentence Rate) | Fraction of distinct outputs (personalisation) |
 | **Alpha-Sentiment Correlation** | Pearson r between α* and VADER sentiment score |
 | **Factual Precision** | Fraction of reference content-words found in the explanation |
-| **BARTScore** | log P(explanation \| reference) scored by **BART-large-CNN** (`facebook/bart-large-cnn`); lower (more negative) is worse |
+| **BARTScore** | log P(explanation \| reference) scored by **BART-large** (`facebook/bart-large-cnn`); lower (more negative) is worse |
 
 ```bash
 cd counterfactual/
